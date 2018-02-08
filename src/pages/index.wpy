@@ -1,0 +1,152 @@
+<style lang="less">
+.swiper {
+  height: 348rpx;
+}
+
+.slide-image {
+  width: 100%;
+  height: 100%;
+}
+
+.pos {
+  position: absolute;
+  top: 0rpx;
+  left: 0;
+  right: 0;
+  .search_content {
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid #efefee;
+    .icon-search,
+    .search_input {
+      color: #efefee;
+    }
+  }
+  .message {
+    display: block;
+    text-align: center;
+    margin-left: 20rpx;
+  }
+  .doc {
+    font-size: 16rpx;
+    display: block;
+  }
+}
+
+
+.nav_list {
+  color: #404040;
+  display: flex;
+  font-size: 26rpx;
+  justify-content: space-between;
+  padding: 17rpx 50rpx;
+  navigator {
+    text-align: center
+  }
+  .nav_icon {
+    height: 80rpx;
+    margin: 0 auto;
+    width: 80rpx;
+    margin-bottom: 14rpx;
+  }
+  .nav_text {
+    font-size: 26rpx
+  }
+}
+
+.recommend-title {
+  padding: 40rpx 0;
+  text-align: center;
+  color: #333;
+}
+</style>
+
+<template>
+  <view class="container">
+
+    <swiper class="swiper" indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
+      <block wx:for="{{adList}}" wx:key="key">
+        <swiper-item>
+          <image src="{{item.picUrl}}" class="slide-image" @tap="goToAdvert({{item.advertUrl}})" />
+        </swiper-item>
+      </block>
+    </swiper>
+
+    <view class="pos">
+      <view class="search_read_only">
+        <navigator class="search_content" open-type="navigate" url="/pages/search">
+          <i class="iconfont icon-search"></i>
+          <view class="search_input">搜索</view>
+        </navigator>
+        <navigator class="message" url="/pages/messages">
+          <i class="iconfont icon-message cfff"></i>
+          <view class="doc cfff">消息</view>
+        </navigator>
+      </view>
+    </view>
+
+    <view class="nav_list">
+      <navigator open-type="navigate" url="/pages/sign_in">
+        <image src="../images/no_image.png" class="nav_icon"></image>
+        <view class="nav_text">nav1</view>
+      </navigator>
+      <navigator open-type="navigate" url="/pages/exchange_goods">
+        <image src="../images/no_image.png" class="nav_icon"></image>
+        <view class="nav_text">nav1</view>
+      </navigator>
+      <navigator open-type="navigate" url="/pages/wholesale">
+        <image src="../images/no_image.png" class="nav_icon"></image>
+        <view class="nav_text">nav1</view>
+      </navigator>
+      <navigator open-type="navigate" url="/pages/replenishment_goods">
+        <image src="../images/no_image.png" class="nav_icon"></image>
+        <view class="nav_text">nav1</view>
+      </navigator>
+    </view>
+    <!--发现好商品模块-->
+    <view class="subject_grid">
+      <!--矩阵商品列表模块-->
+      <higrid :purchasetype.sync="purchasetype" :list.sync="list"></higrid>
+      <!--加载更多时动画-->
+      <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
+      <!--暂无数据显示-->
+      <!-- <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder> -->
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  import testMixin from '../mixins/test'
+  import Higrid from '../components/higrid'
+  import BottomLoadMore from '../components/common/bottomLoadMore'
+
+  console.log('moduleA ignored: ', 'moduleA') // => moduleA ignored: {}
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: 'Hivoice'
+    }
+    components = {
+      bottomLoadMore: BottomLoadMore,
+      higrid: Higrid
+    }
+
+    mixins = [testMixin]
+
+    data = {
+      adList: [
+        {
+          id: 1,
+          picUrl: "../images/slider1.jpg"
+        }
+      ]
+    }
+
+    computed = {}
+
+    methods = {}
+
+    events = {}
+  }
+</script>
