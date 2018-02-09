@@ -258,7 +258,37 @@ const childGoodsCatetoryList = (params) => wxRequest(params, apiMall + '/api/mal
 //商品分类--end
 
 //查询广告列表
-const getBannerList = (params) => wxRequest(params, apiMall + '/api/adverts/list');
+// const getBannerList = (params) => wxRequest(params, apiMall + '/api/adverts/list');
+const getBannerList = (params) => {
+  return {
+    data: {
+      code: 0,
+      msg: "",
+      result: [
+        {
+          id: 1,
+          targetUrl: "http://www.baidu.com",
+          cover: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1518178404867&di=a4c9af133cda4f78612692f2afa08309&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Flvpics%2Fh%3D800%2Fsign%3Debe5980105e939014902803e4bec54f9%2Fbd3eb13533fa828b3122bdc2f91f4134970a5a89.jpg"
+        },
+        {
+          id: 2,
+          targetUrl: "https://hidden-meadow-49311.herokuapp.com/topics/2",
+          cover: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1518178432788&di=b5eb23214c3e47d810b667aab63ed886&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimgad%2Fpic%2Fitem%2F96dda144ad3459828f97f79506f431adcbef8493.jpg"
+        },
+        {
+          id: 3,
+          targetUrl: "https://hidden-meadow-49311.herokuapp.com/topics/9",
+          cover: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1518178458996&di=68cc81bad32a3b2f192385f8bcafce1f&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Flvpics%2Fw%3D1000%2Fsign%3D828bed794210b912bfc1f2fef3cdfe03%2F5bafa40f4bfbfbede4fe9cbd7df0f736aec31f48.jpg"
+        },
+        {
+          id: 4,
+          targetUrl: "https://hidden-meadow-49311.herokuapp.com/topics/8",
+          cover: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1518178493699&di=b99b838927ee325225e576d62e8fc593&imgtype=0&src=http%3A%2F%2Fb.hiphotos.baidu.com%2Flvpics%2Fw%3D1000%2Fsign%3D84372791950a304e5222a4fae1f8a686%2F0824ab18972bd4074cd2806879899e510fb30909.jpg"
+        }
+      ]
+    }
+  }
+}
 
 module.exports = {
   hostGoodsList,

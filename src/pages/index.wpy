@@ -8,31 +8,6 @@
   height: 100%;
 }
 
-.pos {
-  position: absolute;
-  top: 0rpx;
-  left: 0;
-  right: 0;
-  .search_content {
-    background: rgba(0, 0, 0, 0.1);
-    border: 1px solid #efefee;
-    .icon-search,
-    .search_input {
-      color: #efefee;
-    }
-  }
-  .message {
-    display: block;
-    text-align: center;
-    margin-left: 20rpx;
-  }
-  .doc {
-    font-size: 16rpx;
-    display: block;
-  }
-}
-
-
 .nav_list {
   color: #404040;
   display: flex;
@@ -53,11 +28,6 @@
   }
 }
 
-.recommend-title {
-  padding: 40rpx 0;
-  text-align: center;
-  color: #333;
-}
 </style>
 
 <template>
@@ -66,25 +36,25 @@
     <swiper class="swiper" indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
       <block wx:for="{{bannerList}}" wx:key="key">
         <swiper-item>
-          <image src="{{item.picUrl}}" class="slide-image" @tap="goToAdvert({{item.advertUrl}})" />
+          <image src="{{item.cover}}" class="slide-image" @tap="goToAdvert({{item.targetUrl}})" />
         </swiper-item>
       </block>
     </swiper>
 
     <view class="nav_list">
-      <navigator open-type="navigate" url="/pages/sign_in">
+      <navigator open-type="navigate" url="/pages/node?name=life">
         <image src="../images/icon_life_48.png" class="nav_icon"></image>
         <view class="nav_text">生活</view>
       </navigator>
-      <navigator open-type="navigate" url="/pages/exchange_goods">
+      <navigator open-type="navigate" url="/pages/node?name=laugh">
         <image src="../images/icon_world_48.png" class="nav_icon"></image>
         <view class="nav_text">自然</view>
       </navigator>
-      <navigator open-type="navigate" url="/pages/wholesale">
+      <navigator open-type="navigate" url="/pages/node?name=laugh">
         <image src="../images/icon_animal_48.png" class="nav_icon"></image>
         <view class="nav_text">人物</view>
       </navigator>
-      <navigator open-type="navigate" url="/pages/replenishment_goods">
+      <navigator open-type="navigate" url="/pages/node?name=laugh">
         <image src="../images/icon_laugh_48.png" class="nav_icon"></image>
         <view class="nav_text">搞笑</view>
       </navigator>
@@ -124,25 +94,30 @@
     mixins = [testMixin]
 
     data = {
-      bannerList: [
-        {
-          id: 1,
-          picUrl: "../images/slider1.jpg"
-        }
-      ],
+      bannerList: [],
       voiceList: []
     }
 
     computed = {}
 
-    methods = {}
+    methods = {
+      goToAdvert(url) {
+        console.log("url===" + url)
+        if (url.length === 0) {
+          return
+        }
+        wepy.navigateTo({
+          url: url
+        })
+      }
+    }
 
     events = {}
 
     onLoad() {
       let that = this
       that.fetchVoiceList()
-      // this.fetchBannerList()
+      this.fetchBannerList()
     }
 
     onReachBottom() {
@@ -164,11 +139,11 @@
     }
 
     async fetchBannerList() {
-      const json = await api.fetchBannerList({
+      const json = await api.getBannerList({
         query: {}
       })
       if (json.data.code === 0) {
-        this.bannerList = json.data.list
+        this.bannerList = json.data.result
         this.$apply()
       } else {}
     }
