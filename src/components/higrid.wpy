@@ -46,7 +46,7 @@ export default class Higrid extends wepy.component {
 
   }
 
-  getGoodList(currentPage, size) {
+  async getGoodList(currentPage, size) {
     let that = this
     let lllll = [
       {
