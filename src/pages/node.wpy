@@ -1,0 +1,82 @@
+<template>
+  <view class="goodsList">
+    <repeat for="{{voiceList}}" key="index" index="index" item="item">
+      <view class="list_box">
+        <navigator class="item_content" url="/pages/goods_detail?id={{item.goodsId}}">
+          <audio poster="{{item.thumLogo}}" name="{{item.name}}" author="{{item.price}}" src="{{item.source}}" id="myAudio" controls loop class="goods-info"></audio>
+        </navigator>
+      </view>
+    </repeat>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+import api from '../api/api'
+
+export default class Node extends wepy.page {
+  props = {
+    type: 'default'
+  }
+
+  data = {
+    voiceList: []
+  }
+
+  components = {
+  }
+  computed = {
+  }
+
+  methods = {
+  }
+  events = {
+  }
+
+  onLoad() {
+    let that = this
+    console.log(that)
+    that.fetchVoiceList()
+  }
+
+  async fetchVoiceList(currentPage, size) {
+    let that = this
+    const json = await api.getVoiceList({
+      query: {
+        page: currentPage || 1,
+        size: size || 10
+      }
+    })
+    console.log(json)
+    if (json.data.code === 0) {
+      that.voiceList = [...that.voiceList, ...json.data.result]
+
+      if (json.data.result.size === 0) { // 暂无数据
+        that.is_empty = true
+      }
+      that.$apply()
+    } else {
+      // tip.error(json.data.msg)
+    }
+    that.showLoading = false
+  }
+}
+</script>
+
+<style lang="less">
+.goodsList {
+  padding-top: 15rpx;
+}
+
+.goods-info {
+  border-bottom: 1px solid #eee;
+  width: 1000px;
+  box-sizing: border-box;
+}
+
+.list_box {
+  height: 200rpx;
+}
+
+</style>
