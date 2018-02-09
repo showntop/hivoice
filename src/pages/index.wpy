@@ -71,35 +71,22 @@
       </block>
     </swiper>
 
-    <view class="pos">
-      <view class="search_read_only">
-        <navigator class="search_content" open-type="navigate" url="/pages/search">
-          <i class="iconfont icon-search"></i>
-          <view class="search_input">搜索</view>
-        </navigator>
-        <navigator class="message" url="/pages/messages">
-          <i class="iconfont icon-message cfff"></i>
-          <view class="doc cfff">消息</view>
-        </navigator>
-      </view>
-    </view>
-
     <view class="nav_list">
       <navigator open-type="navigate" url="/pages/sign_in">
-        <image src="../images/no_image.png" class="nav_icon"></image>
-        <view class="nav_text">nav1</view>
+        <image src="../images/icon_life_48.png" class="nav_icon"></image>
+        <view class="nav_text">生活</view>
       </navigator>
       <navigator open-type="navigate" url="/pages/exchange_goods">
-        <image src="../images/no_image.png" class="nav_icon"></image>
-        <view class="nav_text">nav1</view>
+        <image src="../images/icon_world_48.png" class="nav_icon"></image>
+        <view class="nav_text">自然</view>
       </navigator>
       <navigator open-type="navigate" url="/pages/wholesale">
-        <image src="../images/no_image.png" class="nav_icon"></image>
-        <view class="nav_text">nav1</view>
+        <image src="../images/icon_animal_48.png" class="nav_icon"></image>
+        <view class="nav_text">人物</view>
       </navigator>
       <navigator open-type="navigate" url="/pages/replenishment_goods">
-        <image src="../images/no_image.png" class="nav_icon"></image>
-        <view class="nav_text">nav1</view>
+        <image src="../images/icon_laugh_48.png" class="nav_icon"></image>
+        <view class="nav_text">搞笑</view>
       </navigator>
     </view>
     <!--发现好商品模块-->

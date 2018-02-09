@@ -1,0 +1,136 @@
+<template>
+  <view class="detail-container">
+    <!--index.wxml-->
+    <view class="cover-container">
+      <image src="{{subjectDetail.cover}}" data-src="{{subjectDetail.cover}}" class="cover-image"/>
+    </view>
+
+    <view class="detail-header">
+      <audio poster="{{poster}}" name="{{subjectDetail.title}}" author="{{author}}" src="{{subjectDetail.source}}" id="myAudio" controls="{{false}}" loop></audio>
+      <view class="title"><text>{{subjectDetail.title}}</text></view>
+      <image src="../images/icon_play_48.png" mode="aspectFit" class="icon icon_48" style=" {{playing?'display:block':'display:none'}}" @tap="switchPlayer"/>
+      <image src="../images/icon_stop_48.png" mode="aspectFit" class="icon icon_48" style=" {{playing?'display:none':'display:block'}}" @tap="switchPlayer"/>
+    </view>
+
+    <view class="detail_info">
+      <text class="content">{{subjectDetail.info}}</text>
+       
+      <view class="share-box">
+        <i class="iconfont icon-share"></i>
+        <text>分享</text>
+      </view>
+    </view>
+
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+
+import api from '../api/api'
+
+export default class Subject extends wepy.page {
+  config = {
+    navigationBarTitleText: '声网世界，开启'
+  }
+
+  data = {
+    subjectId: 0,
+    subjectDetail: {},
+    playing: false
+  }
+
+  components = {
+  }
+
+  methods = {
+    switchPlayer() {
+      if (this.playing === true) {
+        this.pausePlayer()
+        console.log("暂停播放")
+        console.log(this.playing)
+      } else {
+        this.playPlayer()
+        console.log("播放")
+      }
+    }
+  }
+
+  onReady(e) {
+    this.audioCtx = wepy.createAudioContext('myAudio')
+  }
+
+  onLoad(option) {
+    this.getSubject()
+  }
+
+  onShow() {
+  }
+
+  async pausePlayer() {
+    let that = this
+    that.playing = false
+    this.audioCtx.pause()
+    that.$apply()
+  }
+
+  async playPlayer() {
+    let that = this
+    this.audioCtx.play()
+    that.playing = true
+    that.$apply()
+  }
+
+  async getSubject() {
+    let that = this
+    const json = await api.getSubject({
+      query: {
+        id: that.subjectId
+      }
+    })
+    if (json.data.code === 0) {
+      that.subjectDetail = json.data.result
+    } else {
+    }
+    that.$apply()
+  }
+}
+
+</script>
+<style lang="less">
+  .detail-container{
+    height: 100%;
+  }
+  .cover-image{
+    width: 100%;
+  }
+  .detail-header {
+    display: flex;
+    height: 50px;
+    position: relative;
+    align-items: center;
+  }
+  .title {
+    overflow: hidden;
+    width: 80%;
+    font-size: 45rpx;
+    color: #333;
+    text-overflow: ellipsis; 
+    white-space: nowrap;
+    padding-left: 5px;
+  }
+  .detail_info {
+    padding: 10px;
+    .content {
+      font-size: 35rpx;
+    }
+  }
+  .icon {
+    position: absolute;
+    right: 5px;
+    top: 1px;
+  }
+  .icon_48 {
+    width: 48px;
+    height: 48px;
+  }
+</style>
