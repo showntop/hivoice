@@ -38,6 +38,7 @@ const getVoiceList = (params) => {
       "stockNum": 150,
       "wholePrice": 119,
       "logo": "http://sujiefs.com/upload/images/20180125/201801251646441664583.jpg",
+      "source": 'http://ws.stream.qqmusic.qq.com/M500001VfvsJ21xFqb.mp3?guid=ffffffff82def4af4b12b3cd9337d5e7&uin=346897220&vkey=6292F51E1E384E06DCBDC9AB7C49FD713D632D313AC4858BACB8DDD29067D3C601481D36E62053BF8DFEAF74C0A5CCFADD6471160CAF3E6A&fromtag=46',
       "id": "2c9257a16126d14701612c8321ef013e"
     },
     {
@@ -54,6 +55,7 @@ const getVoiceList = (params) => {
       "wholePrice": 118,
       "node": "自然",
       "logo": "http://sujiefs.com/upload/images/20180125/201801251418536724109.jpg",
+      "source": 'http://ws.stream.qqmusic.qq.com/M500001VfvsJ21xFqb.mp3?guid=ffffffff82def4af4b12b3cd9337d5e7&uin=346897220&vkey=6292F51E1E384E06DCBDC9AB7C49FD713D632D313AC4858BACB8DDD29067D3C601481D36E62053BF8DFEAF74C0A5CCFADD6471160CAF3E6A&fromtag=46',
       "id": "2c9257a16126d14701612c032f360110"
     },
     {
@@ -70,6 +72,7 @@ const getVoiceList = (params) => {
       "stockNum": 300,
       "wholePrice": 118,
       "logo": "http://sujiefs.com/upload/images/20180126/201801261154140274561.jpg",
+      "source": 'http://ws.stream.qqmusic.qq.com/M500001VfvsJ21xFqb.mp3?guid=ffffffff82def4af4b12b3cd9337d5e7&uin=346897220&vkey=6292F51E1E384E06DCBDC9AB7C49FD713D632D313AC4858BACB8DDD29067D3C601481D36E62053BF8DFEAF74C0A5CCFADD6471160CAF3E6A&fromtag=46',
       "id": "2c9257a16126d147016130c94aa901e6"
     },
     {
@@ -86,6 +89,7 @@ const getVoiceList = (params) => {
       "stockNum": 150,
       "wholePrice": 119,
       "logo": "http://sujiefs.com/upload/images/20180127/201801271610459640091.jpg",
+      "source": 'http://ws.stream.qqmusic.qq.com/M500001VfvsJ21xFqb.mp3?guid=ffffffff82def4af4b12b3cd9337d5e7&uin=346897220&vkey=6292F51E1E384E06DCBDC9AB7C49FD713D632D313AC4858BACB8DDD29067D3C601481D36E62053BF8DFEAF74C0A5CCFADD6471160CAF3E6A&fromtag=46',
       "id": "2c9257a16126d147016136b6f22f0362"
     },
     {
@@ -102,6 +106,7 @@ const getVoiceList = (params) => {
       "node": "生活",
       "wholePrice": 238,
       "logo": "http://sujiefs.com/upload/images/20180127/201801271115216801676.jpg",
+      "source": 'http://ws.stream.qqmusic.qq.com/M500001VfvsJ21xFqb.mp3?guid=ffffffff82def4af4b12b3cd9337d5e7&uin=346897220&vkey=6292F51E1E384E06DCBDC9AB7C49FD713D632D313AC4858BACB8DDD29067D3C601481D36E62053BF8DFEAF74C0A5CCFADD6471160CAF3E6A&fromtag=46',
       "id": "2c9257a16126d1470161359fc27502a1"
     }
   ]
