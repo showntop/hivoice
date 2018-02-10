@@ -7,10 +7,10 @@
     <image class="bg-style" animation="{{spreakingAnimation_2}}" src="../images/voice_video_loading_0.png"></image>
 
     <image class="sound-style" src="../images/icon_voice_speech_sound_1.png"></image>
-    <image if="{{j==2}}" class="sound-style" src="../images/icon_voice_speech_sound_2.png"></image>
-    <image if="{{j==3}}" class="sound-style" src="../images/icon_voice_speech_sound_3.png"></image>
-    <image if="{{j==4}}" class="sound-style" src="../images/icon_voice_speech_sound_4.png"></image>
-    <image if="{{j==5}}" class="sound-style" src="../images/icon_voice_speech_sound_5.png"></image>
+    <image style="{{j==2?'display:block': 'display:none'}}" class="sound-style" src="../images/icon_voice_speech_sound_2.png"></image>
+    <image style="{{j==3?'display:block': 'display:none'}}" class="sound-style" src="../images/icon_voice_speech_sound_3.png"></image>
+    <image style="{{j==4?'display:block': 'display:none'}}" class="sound-style" src="../images/icon_voice_speech_sound_4.png"></image>
+    <image style="{{j==5?'display:block': 'display:none'}}" class="sound-style" src="../images/icon_voice_speech_sound_5.png"></image>
   </view>
 </template>
 <script>
@@ -39,7 +39,9 @@ export default class Recorder extends wepy.component {
   data = {
     j: 1,
     spreaking: false,
-    pleaseRecord: false
+    pleaseRecord: false,
+    spreakingAnimation: {},
+    spreakingAnimation_1: {}
   }
 
   events = {
@@ -60,10 +62,6 @@ export default class Recorder extends wepy.component {
 
   onLoad() {
     console.log("load")
-  }
-
-  onShow() {
-    console.log("show")
   }
 
   startSpeak() {
@@ -106,39 +104,39 @@ export default class Recorder extends wepy.component {
 
   spreak() {
     let that = this
+
     let i = 1
-    this.timer = setInterval(function () {
+    this.timer = setInterval(() => {
       i++
       i = i % 5
-      that.setData({ j: i })
+      this.j = i
+      this.$apply()
     }, 300)
+
     let animation = wepy.createAnimation({
       duration: 1000
     }) // 动画放大效果
 
     animation.opacity(0).scale(3, 3).step()
-    this.setData({
-      spreakingAnimation: animation.export()
-    }) // 放大淡出
+    this.spreakingAnimation = animation.export()
 
-    setTimeout(function() {
+    setTimeout(() => {
       let animation = wepy.createAnimation({
         duration: 1000
       }) // 动画放大效果
       animation.opacity(0).scale(3, 3).step() // 放大淡出
-      that.setData({
-        spreakingAnimation_1: animation.export()
-      })
+      that.spreakingAnimation_1 = animation.export()
+      this.$apply()
     }, 2000) // 以上动画执行完成后执行后续动画
 
-    setTimeout(function () {
+    setTimeout(() => {
+      console.log("1", 2)
       let animation = wepy.createAnimation({
         duration: 1000
       })
       animation.opacity(0).scale(3, 3).step() // 放大淡出
-      that.setData({
-        spreakingAnimation_1: animation.export()
-      })
+      that.spreakingAnimation_2 = animation.export()
+      this.$apply()
     }, 3000)
   }
 }
