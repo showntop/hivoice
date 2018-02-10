@@ -168,6 +168,10 @@
           animation.scale(1, 1).rotate(0).step()
 
           this.animationData = animation.export()
+          this.$apply
+          wepy.navigateTo({
+            url: "/pages/editor"
+          })
         }
       },
       record(res) {

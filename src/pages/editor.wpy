@@ -1,0 +1,77 @@
+<template>
+  <view>
+    <form bindsubmit="formSubmit" bindreset="formReset">
+      <view class="section section_gap scale">
+        <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/>
+        <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/>
+        <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/>
+        <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/>
+        <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/>
+      </view>
+      <view class="section section_gap">
+        <view class="section__title">标题</view>
+        <input name="switch"/>
+      </view>
+      <view class="section section_gap">
+        <view class="section__title">说明/描述</view>
+        <textarea name="slider"/>
+      </view>
+
+      <view class="btn-area">
+        <button formType="submit">Submit</button>
+        <button formType="reset">Reset</button>
+      </view>
+    </form>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+// import api from '../api/api'
+
+export default class Editor extends wepy.page {
+  props = {
+  }
+
+  data = {
+  }
+
+  components = {
+  }
+  computed = {
+  }
+
+  methods = {
+  }
+  events = {
+  }
+
+  onReady(e) {
+  }
+
+  onLoad() {
+    let that = this
+    console.log(that)
+  }
+}
+</script>
+
+<style lang="less">
+  .scale {
+    margin: 10px;
+    height: 100px;
+    border-top: 1px;
+    border-bottom: 1px;
+    border-style: solid;
+    border-left: 0px;
+    border-right: 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    .audio_img{
+    }
+  }
+</style>
