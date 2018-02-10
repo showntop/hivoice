@@ -2,7 +2,7 @@
   <view class="goodsList">
     <repeat for="{{voiceList}}" key="index" index="index" item="item">
       <view class="list_box">
-        <audio poster="{{item.thumLogo}}" name="{{item.name}}" author="{{item.price}}" src="{{item.source}}" id="myAudio" controls="{{false}}" loop class="goods-info"></audio>
+        <audio poster="{{item.thumLogo}}" name="{{item.name}}" author="{{item.price}}" src="{{item.source}}" id="myAudio" controls="{{false}}" loop></audio>
         <navigator class="item_content" url="/pages/goods_detail?id={{item.id}}">
           <view class="goods-info">
             <view class="img-box">
