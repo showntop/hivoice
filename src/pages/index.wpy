@@ -1,4 +1,8 @@
 <style lang="less">
+// .index {
+//   position: relative;
+// }
+
 .swiper {
   height: 348rpx;
 }
@@ -26,6 +30,36 @@
   .nav_text {
     font-size: 26rpx
   }
+}
+
+.recorder-dialog {
+  display: flex;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  position: fixed;
+
+  .recorder {
+    margin-top: 60%;
+  }
+}
+
+.recorder-btn {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  width: 64px;
+  height: 64px;
+  border-radius: 100%;
+  background-color: red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  color: white;
+  z-index: 1000;
 }
 
 </style>
@@ -68,6 +102,10 @@
       <!--暂无数据显示-->
       <!-- <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder> -->
     </view>
+    <view class="recorder-dialog" style="{{showRecorder?'display: block':'display:none'}}">
+      <recorder class="recorder" :pleaseRecord.sync="showRecorder"/>
+    </view>
+    <view class="recorder-btn" animation="{{animationData}}" @tap="stopRecord" @longpress="record">{{recorderBtnName}}</view>
   </view>
 </template>
 
@@ -77,6 +115,7 @@
   import api from '../api/api'
 
   import testMixin from '../mixins/test'
+  import Recorder from '../components/recorder'
   import Higrid from '../components/higrid'
   import BottomLoadMore from '../components/common/bottomLoadMore'
 
@@ -88,14 +127,18 @@
     }
     components = {
       bottomLoadMore: BottomLoadMore,
-      higrid: Higrid
+      higrid: Higrid,
+      recorder: Recorder
     }
 
     mixins = [testMixin]
 
     data = {
+      recorderBtnName: '漏一嘴',
       bannerList: [],
-      voiceList: []
+      voiceList: [],
+      showRecorder: false,
+      animationData: {}
     }
 
     computed = {}
@@ -109,6 +152,47 @@
         wepy.navigateTo({
           url: url
         })
+      },
+      stopRecord(res) {
+        if (this.showRecorder) {
+          this.showRecorder = false
+          this.recorderBtnName = "漏一嘴"
+
+          let animation = wepy.createAnimation({
+            duration: 1000,
+            timingFunction: 'ease'
+          })
+
+          this.animation = animation
+
+          animation.scale(1, 1).rotate(0).step()
+
+          this.animationData = animation.export()
+        }
+      },
+      record(res) {
+        if (this.showRecorder) {
+          return
+        }
+        this.showRecorder = true
+
+        let animation = wepy.createAnimation({
+          duration: 2000,
+          timingFunction: 'ease'
+        })
+
+        this.animation = animation
+
+        animation.scale(2, 2).rotate(45).translate(20).step()
+
+        this.animationData = animation.export()
+
+        // setTimeout(() => {
+        // console.log("hi", this)
+        // animation.translate(20).step()
+        // this.animationData = animation.export()
+        this.recorderBtnName = "停止"
+        // }, 1000)
       }
     }
 
