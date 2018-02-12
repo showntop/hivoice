@@ -93,7 +93,6 @@ export default class Recorder extends wepy.component {
     let that = this
     that.speak()
     that.speaking = true
-    console.log("that.speaking", that.speaking)
     recorderManager.start(options)
   }
 

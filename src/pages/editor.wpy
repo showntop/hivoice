@@ -7,7 +7,7 @@
         <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/>
         <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/>
         <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/> -->
-        <audio style="width: 100%;" poster="{{poster}}" name="{{title}}" author="{{author}}" src="{{src}}" id="myAudio" controls loop></audio>
+        <audio style="width: 100%;" poster="{{poster}}" name="{{title}}" author="{{author}}" src="{{src}}" id="myAudio" controls loop @tap="playVoice"></audio>
       </view>
       <view class="section section_gap" style="display:flex; justify-content: center; align-items: center;">
         <image src="{{cover}}" style="width: 90%; height: 160px;" @tap="chooseCover"/>
@@ -51,6 +51,16 @@ export default class Editor extends wepy.page {
   }
 
   methods = {
+    playVoice(e) {
+      console.log("play", this.srcFile)
+      wepy.playVoice({
+        filePath: this.srcFile,
+        complete: () => {},
+        fail: (res) => {
+          console.log('failed', res)
+        }
+      })
+    },
     titleInput(e) {
       this.title = e.detail.value
       this.$apply()
