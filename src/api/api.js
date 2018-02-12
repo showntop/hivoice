@@ -147,6 +147,22 @@ const getSubject = (params) => {
     }
   }
 }
+
+const createSubject = (params) => {
+  return {
+    data: {
+      code: 0,
+      msg: "",
+      result: {
+        id: 111,
+        cover: "http://img-cdn2.luoo.net/pics/vol/5a71eb60ac679.jpg!/fwfh/640x452",
+        title: '对面的你，如何能不忧愁fasdffffffffffffff发顺丰的发大水发斯蒂芬',
+        source: 'http://ws.stream.qqmusic.qq.com/M500001VfvsJ21xFqb.mp3?guid=ffffffff82def4af4b12b3cd9337d5e7&uin=346897220&vkey=6292F51E1E384E06DCBDC9AB7C49FD713D632D313AC4858BACB8DDD29067D3C601481D36E62053BF8DFEAF74C0A5CCFADD6471160CAF3E6A&fromtag=46',
+        info: `这是我的一段简介描述，与故事，很高兴见到你们！！`
+      }
+    }
+  }
+}
 //商品加入购物车
 const addCart = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/add');
 //用户的购物车商品列表

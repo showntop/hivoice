@@ -1,10 +1,10 @@
 <template>
-  <view class="voice-style" @tap="startSpeak">
+  <view class="voice-style" @tap="switchRecord">
     <image class="bg-style" src="../images/icon_voice_speaking_bg_normal.png"></image>
     
-    <image class="bg-style" animation="{{spreakingAnimation}}" src="../images/voice_video_loading_0.png"></image>
-    <image class="bg-style" animation="{{spreakingAnimation_1}}" src="../images/voice_video_loading_0.png"></image>
-    <image class="bg-style" animation="{{spreakingAnimation_2}}" src="../images/voice_video_loading_0.png"></image>
+    <image class="bg-style" animation="{{speakingAnimation}}" src="../images/voice_video_loading_0.png"></image>
+    <image class="bg-style" animation="{{speakingAnimation_1}}" src="../images/voice_video_loading_0.png"></image>
+    <image class="bg-style" animation="{{speakingAnimation_2}}" src="../images/voice_video_loading_0.png"></image>
 
     <image class="sound-style" src="../images/icon_voice_speech_sound_1.png"></image>
     <image style="{{j==2?'display:block': 'display:none'}}" class="sound-style" src="../images/icon_voice_speech_sound_2.png"></image>
@@ -29,19 +29,21 @@ const recorderManager = wepy.getRecorderManager()
 
 export default class Recorder extends wepy.component {
   props = {
-    pleaseRecord: false,
-    syncPleaseRecord: {
-      type: Boolean,
-      default: false
-    }
+    recordFile: String,
+    // twoWayRecordFile: {
+    //   type: String,
+    //   default: 'nothing',
+    //   twoWay: true
+    // }
   }
 
   data = {
     j: 1,
-    spreaking: false,
-    pleaseRecord: false,
-    spreakingAnimation: {},
-    spreakingAnimation_1: {}
+    recordFile: "",
+    // twoWayRecordFile: "",
+    speaking: false,
+    speakingAnimation: {},
+    speakingAnimation_1: {}
   }
 
   events = {
@@ -52,57 +54,65 @@ export default class Recorder extends wepy.component {
   }
 
   watch = {
-    pleaseRecord(newValue, oldValue) {
-      console.log(`num value: ${oldValue} -> ${newValue}`)
-      if (this.pleaseRecord) {
-        this.startSpeak()
-      }
-    }
+    // pleaseRecord(newValue, oldValue) {
+    //   console.log(`num value: ${oldValue} -> ${newValue}`)
+    //   if (this.pleaseRecord) {
+    //     this.switchRecord()
+    //   }
+    // }
   }
 
   onLoad() {
     console.log("load")
+    recorderManager.onStart(() => {
+      console.log('recorder start')
+    })
+    recorderManager.onResume(() => {
+      console.log('recorder resume')
+    })
+    recorderManager.onPause(() => {
+      console.log('recorder pause')
+    })
+    recorderManager.onStop((res) => {
+      this.recordFile = res.tempFilePath
+      // this.twoWayRecordFile = res.tempFilePath
+      this.$apply()
+      this.$emit("stoped", res)
+      console.log('recorder stop', res)
+    })
+    recorderManager.onFrameRecorded((res) => {
+      const { frameBuffer } = res
+      // this.voiceFilePath = res.tempFilePath
+      // this.twoWayRecordFile = res.tempFilePath
+      // this.$apply()
+      console.log('frameBuffer.byteLength', frameBuffer.byteLength)
+    })
   }
 
-  startSpeak() {
+  startRecord() {
+    let that = this
+    that.speak()
+    that.speaking = true
+    console.log("that.speaking", that.speaking)
+    recorderManager.start(options)
+  }
+
+  stopRecord() {
+    let that = this
+    clearInterval(that.timer)
+    that.speaking = false
+    that.j = 1
+    recorderManager.stop()
+  }
+
+  switchRecord() {
     let that = this
     if (!that.speaking) {
-      that.spreak()
-      that.speaking = true
-      recorderManager.onStart(() => {
-        console.log('recorder start')
-      })
-      recorderManager.onResume(() => {
-        console.log('recorder resume')
-      })
-      recorderManager.onPause(() => {
-        console.log('recorder pause')
-      })
-      recorderManager.onStop((res) => {
-        console.log('recorder stop', res)
-      })
-      recorderManager.onFrameRecorded((res) => {
-        const { frameBuffer } = res
-        console.log('frameBuffer.byteLength', frameBuffer.byteLength)
-      })
-
-      recorderManager.start(options)
     } else {
-      clearInterval(that.timer)
-      that.speaking = false
-      that.j = 1
-      // recorderManager.stopRecord({
-      //   success: function(res) {
-      //   },
-      //   fail: function() {
-      //   },
-      //   complete: function() {
-      //   }
-      // })
     }
   }
 
-  spreak() {
+  speak() {
     let that = this
 
     let i = 1
@@ -118,14 +128,14 @@ export default class Recorder extends wepy.component {
     }) // 动画放大效果
 
     animation.opacity(0).scale(3, 3).step()
-    this.spreakingAnimation = animation.export()
+    this.speakingAnimation = animation.export()
 
     setTimeout(() => {
       let animation = wepy.createAnimation({
         duration: 1000
       }) // 动画放大效果
       animation.opacity(0).scale(3, 3).step() // 放大淡出
-      that.spreakingAnimation_1 = animation.export()
+      that.speakingAnimation_1 = animation.export()
       this.$apply()
     }, 2000) // 以上动画执行完成后执行后续动画
 
@@ -135,7 +145,7 @@ export default class Recorder extends wepy.component {
         duration: 1000
       })
       animation.opacity(0).scale(3, 3).step() // 放大淡出
-      that.spreakingAnimation_2 = animation.export()
+      that.speakingAnimation_2 = animation.export()
       this.$apply()
     }, 3000)
   }

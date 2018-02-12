@@ -46,22 +46,6 @@
   }
 }
 
-.recorder-btn {
-  position: fixed;
-  bottom: 15px;
-  right: 15px;
-  width: 64px;
-  height: 64px;
-  border-radius: 100%;
-  background-color: red;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30rpx;
-  color: white;
-  z-index: 1000;
-}
-
 </style>
 
 <template>
@@ -103,9 +87,10 @@
       <!-- <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder> -->
     </view>
     <view class="recorder-dialog" style="{{showRecorder?'display: block':'display:none'}}">
-      <recorder class="recorder" :pleaseRecord.sync="showRecorder"/>
+      <recorder class="recorder" @stoped.user="handleRecord"/>
+      <!-- <recorder class="recorder" :twoWayRecordFile="myRecordFile"/> -->
     </view>
-    <view class="recorder-btn" animation="{{animationData}}" @tap="stopRecord" @longpress="record">{{recorderBtnName}}</view>
+    <charmButton :name.sync="recorderBtnName" @longpressed.user="triggerRecord" @taped.user="stopRecord"></charmButton>
   </view>
 </template>
 
@@ -117,6 +102,7 @@
   import testMixin from '../mixins/test'
   import Recorder from '../components/recorder'
   import Higrid from '../components/higrid'
+  import CharmButton from '../components/charmbutton'
   import BottomLoadMore from '../components/common/bottomLoadMore'
 
   console.log('moduleA ignored: ', 'moduleA') // => moduleA ignored: {}
@@ -128,12 +114,14 @@
     components = {
       bottomLoadMore: BottomLoadMore,
       higrid: Higrid,
-      recorder: Recorder
+      recorder: Recorder,
+      charmButton: CharmButton
     }
 
     mixins = [testMixin]
 
     data = {
+      // myRecordFile: "",
       recorderBtnName: '漏一嘴',
       bannerList: [],
       voiceList: [],
@@ -153,50 +141,24 @@
           url: url
         })
       },
+      handleRecord(res) {
+        wepy.navigateTo({
+          url: "/pages/editor?recordFile=" + res.tempFilePath
+        })
+      },
       stopRecord(res) {
         if (this.showRecorder) {
           this.showRecorder = false
-          this.recorderBtnName = "漏一嘴"
-
-          let animation = wepy.createAnimation({
-            duration: 1000,
-            timingFunction: 'ease'
-          })
-
-          this.animation = animation
-
-          animation.scale(1, 1).rotate(0).step()
-
-          this.animationData = animation.export()
-          this.$apply
-          wepy.navigateTo({
-            url: "/pages/editor"
-          })
+          this.$invoke('recorder', 'stopRecord', 'someArgs')
         }
       },
-      record(res) {
+      triggerRecord(res) {
         if (this.showRecorder) {
           return
         }
+        this.recorderBtnName = '停止'
         this.showRecorder = true
-
-        let animation = wepy.createAnimation({
-          duration: 2000,
-          timingFunction: 'ease'
-        })
-
-        this.animation = animation
-
-        animation.scale(2, 2).rotate(45).translate(20).step()
-
-        this.animationData = animation.export()
-
-        // setTimeout(() => {
-        // console.log("hi", this)
-        // animation.translate(20).step()
-        // this.animationData = animation.export()
-        this.recorderBtnName = "停止"
-        // }, 1000)
+        this.$invoke('recorder', 'startRecord', 'someArgs')
       }
     }
 

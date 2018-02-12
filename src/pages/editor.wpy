@@ -2,19 +2,23 @@
   <view>
     <form bindsubmit="formSubmit" bindreset="formReset">
       <view class="section section_gap scale">
+       <!--  <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/>
         <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/>
         <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/>
         <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/>
-        <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/>
-        <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/>
+        <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/> -->
+        <audio style="width: 100%;" poster="{{poster}}" name="{{title}}" author="{{author}}" src="{{src}}" id="myAudio" controls loop></audio>
       </view>
+      <view class="section section_gap" style="display:flex; justify-content: center; align-items: center;">
+        <image src="{{cover}}" style="width: 90%; height: 160px;" @tap="chooseCover"/>
+      </view>      
       <view class="section section_gap">
         <view class="section__title">标题</view>
-        <input name="switch"/>
+        <input name="input" type="text" @input="titleInput" style="border-style: solid;  border-top: 0px; border-left: 0px; border-right: 0px;" />
       </view>
       <view class="section section_gap">
-        <view class="section__title">说明/描述</view>
-        <textarea name="slider"/>
+        <view class="section__info">说明/描述</view>
+        <textarea name="textarea" @input="infoInput" style="border-style: solid;" />
       </view>
 
       <view class="btn-area">
@@ -35,6 +39,10 @@ export default class Editor extends wepy.page {
   }
 
   data = {
+    title: "",
+    info: "",
+    srcFile: "",
+    cover: "../images/no_image.png"
   }
 
   components = {
@@ -43,6 +51,33 @@ export default class Editor extends wepy.page {
   }
 
   methods = {
+    titleInput(e) {
+      this.title = e.detail.value
+      this.$apply()
+    },
+    infoInput(e) {
+      this.info = e.detail.value
+      this.$apply()
+    },
+    chooseCover(e) {
+      let that = this
+      wepy.chooseImage({
+        count: 1, // 设置最多可以选择的图片张数，默认9,如果我们设置了多张,那么接收时//就不在是单个变量了,
+        sizeType: ['original', 'compressed'], // original 原图，compressed 压缩图，默认二者都有
+        sourceType: ['album', 'camera'], // album 从相册选图，camera 使用相机，默认二者都有
+        success: (res) => {
+          let tempFilePaths = res.tempFilePaths // 获取成功,将获取到的地址赋值给临时变量
+          that.cover = tempFilePaths
+          that.$apply()
+        },
+        fail: function(res) {
+          // fail
+        },
+        complete: function(res) {
+          // complete
+        }
+      })
+    }
   }
   events = {
   }
@@ -50,9 +85,9 @@ export default class Editor extends wepy.page {
   onReady(e) {
   }
 
-  onLoad() {
+  onLoad(option) {
     let that = this
-    console.log(that)
+    that.srcFile = option.recordFile
   }
 }
 </script>
@@ -61,7 +96,7 @@ export default class Editor extends wepy.page {
   .scale {
     margin: 10px;
     height: 100px;
-    border-top: 1px;
+    border-top: 0px;
     border-bottom: 1px;
     border-style: solid;
     border-left: 0px;
@@ -73,5 +108,8 @@ export default class Editor extends wepy.page {
 
     .audio_img{
     }
+  }
+  .section {
+    padding: 10px;
   }
 </style>

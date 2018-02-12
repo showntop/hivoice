@@ -1,0 +1,83 @@
+<template>
+  <view class="charm-btn" 
+    animation="{{animationData}}" 
+    @tap="tapMe" @longpress="longpressMe">{{name}}
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class CharmButton extends wepy.component {
+  props = {
+    name: {
+      default: '点我'
+    }
+  }
+
+  data = {
+    animationData: {}
+  }
+
+  events = {
+
+  }
+
+  methods = {
+    tapMe() {
+      this.recorderBtnName = "漏一嘴"
+
+      let animation = wepy.createAnimation({
+        duration: 1000,
+        timingFunction: 'ease'
+      })
+
+      this.animation = animation
+
+      animation.scale(1, 1).rotate(0).step()
+
+      this.animationData = animation.export()
+
+      this.$emit('taped', 1, 2, 3, 4)
+    },
+    longpressMe() {
+      let animation = wepy.createAnimation({
+        duration: 2000,
+        timingFunction: 'ease'
+      })
+      console.log('hellow')
+      this.animation = animation
+
+      animation.scale(2, 2).rotate(45).step()
+
+      this.animationData = animation.export()
+
+      setTimeout(() => {
+        animation.translate(20).step()
+        this.animationData = animation.export()
+        this.$apply()
+      }, 1000)
+      this.$emit('longpressed', 1, 2, 3, 4)
+    }
+  }
+
+  onLoad() {}
+}
+
+</script>
+<style lang="less">
+  .charm-btn {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    width: 64px;
+    height: 64px;
+    border-radius: 100%;
+    background-color: red;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30rpx;
+    color: white;
+    z-index: 1000;
+  }
+</style>
