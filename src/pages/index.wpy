@@ -105,8 +105,6 @@
   import CharmButton from '../components/charmbutton'
   import BottomLoadMore from '../components/common/bottomLoadMore'
 
-  console.log('moduleA ignored: ', 'moduleA') // => moduleA ignored: {}
-
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: 'Hivoice'
@@ -165,6 +163,8 @@
     events = {}
 
     onLoad() {
+      console.log(this)
+      console.log(wepy)
       let that = this
       that.fetchVoiceList()
       this.fetchBannerList()

@@ -2,12 +2,11 @@
   <view class="goodsList">
     <repeat for="{{voiceList}}" key="index" index="index" item="item">
       <view class="list_box">
-        <audio poster="{{item.thumLogo}}" name="{{item.name}}" author="{{item.price}}" src="{{item.source}}" id="myAudio" controls="{{false}}" loop></audio>
         <navigator class="item_content" url="/pages/subject?id={{item.id}}">
           <view class="goods-info">
             <view class="img-box">
-              <image src="../images/icon_play_white_48.png" style="{{playingItem == item.id?'display:none':'display:block'}}" @tap.stop="switchPlayer('play',{{item.id}})" class="img-font"/>
-              <image src="../images/icon_stop_white_48.png" style="{{playingItem == item.id?'display:block':'display:none'}}" @tap.stop="switchPlayer('stop',{{item.id}})" class="img-font"/>
+              <image src="../images/icon_play_white_48.png" style="{{playingItem == item.id?'display:none':'display:block'}}" @tap.stop="switchPlayer('play',{{item}})" class="img-font"/>
+              <image src="../images/icon_stop_white_48.png" style="{{playingItem == item.id?'display:block':'display:none'}}" @tap.stop="switchPlayer('stop',{{item}})" class="img-font"/>
               <image src="{{item.thumLogo}}" class="img-back" />
             </view>
             <view class="text-box">
@@ -25,6 +24,7 @@
 import wepy from 'wepy'
 
 import api from '../api/api'
+import audio from '../utility/audio'
 
 export default class Node extends wepy.page {
   props = {
@@ -42,28 +42,20 @@ export default class Node extends wepy.page {
   }
 
   methods = {
-    switchPlayer(event, itemId) {
-      console.log(event, " ", itemId)
+    switchPlayer(event, item) {
+      audio.sw(item)
       if (event === "stop") {
-        this.stopPlayer(itemId)
-        console.log("暂停播放")
+        this.playingItem = "null"
       } else {
-        this.playPlayer(itemId)
-        console.log("播放")
+        this.playingItem = item.id
       }
     }
   }
   events = {
   }
 
-  onReady(e) {
-    this.audioCtx = wepy.createAudioContext('myAudio')
-  }
-
   onLoad() {
-    let that = this
-    console.log(that)
-    that.fetchVoiceList()
+    this.fetchVoiceList()
   }
 
   async fetchVoiceList(currentPage, size) {
@@ -86,21 +78,6 @@ export default class Node extends wepy.page {
       // tip.error(json.data.msg)
     }
     that.showLoading = false
-  }
-
-  async stopPlayer(itemId) {
-    let that = this
-    that.playingItem = "null"
-    this.audioCtx.pause()
-    that.$apply()
-  }
-
-  async playPlayer(itemId) {
-    let that = this
-    that.playingItem = itemId
-    this.audioCtx.play()
-    console.log("-------", that)
-    that.$apply()
   }
 }
 </script>

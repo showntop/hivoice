@@ -29,7 +29,7 @@ const recorderManager = wepy.getRecorderManager()
 
 export default class Recorder extends wepy.component {
   props = {
-    recordFile: String,
+    recordFile: String
     // twoWayRecordFile: {
     //   type: String,
     //   default: 'nothing',

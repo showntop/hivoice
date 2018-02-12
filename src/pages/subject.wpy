@@ -25,12 +25,13 @@
 </template>
 <script>
 import wepy from 'wepy'
+import audio from '../utility/audio'
 
 import api from '../api/api'
 
 export default class Subject extends wepy.page {
   config = {
-    navigationBarTitleText: '声网世界，开启'
+    navigationBarTitleText: '声网，你的世界'
   }
 
   data = {
@@ -42,21 +43,12 @@ export default class Subject extends wepy.page {
   components = {
   }
 
+  mixins = []
+
   methods = {
     switchPlayer() {
-      if (this.playing === true) {
-        this.pausePlayer()
-        console.log("暂停播放")
-        console.log(this.playing)
-      } else {
-        this.playPlayer()
-        console.log("播放")
-      }
+      audio.sw(this.subjectDetail)
     }
-  }
-
-  onReady(e) {
-    this.audioCtx = wepy.createAudioContext('myAudio')
   }
 
   onLoad(option) {
@@ -64,20 +56,6 @@ export default class Subject extends wepy.page {
   }
 
   onShow() {
-  }
-
-  async pausePlayer() {
-    let that = this
-    that.playing = false
-    this.audioCtx.pause()
-    that.$apply()
-  }
-
-  async playPlayer() {
-    let that = this
-    this.audioCtx.play()
-    that.playing = true
-    that.$apply()
   }
 
   async getSubject() {
