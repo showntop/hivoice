@@ -87,6 +87,10 @@ export default class Recorder extends wepy.component {
       // this.$apply()
       console.log('frameBuffer.byteLength', frameBuffer.byteLength)
     })
+    recorderManager.onError((res) => {
+      console.log('recorder error', res)
+      this.$parent.getUserInfo()
+    })
   }
 
   startRecord() {

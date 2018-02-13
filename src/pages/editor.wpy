@@ -42,7 +42,8 @@ export default class Editor extends wepy.page {
     title: "",
     info: "",
     srcFile: "",
-    cover: "../images/no_image.png"
+    cover: "../images/no_image.png",
+    innerAudioContext: null
   }
 
   components = {
@@ -53,13 +54,8 @@ export default class Editor extends wepy.page {
   methods = {
     playVoice(e) {
       console.log("play", this.srcFile)
-      wepy.playVoice({
-        filePath: this.srcFile,
-        complete: () => {},
-        fail: (res) => {
-          console.log('failed', res)
-        }
-      })
+      this.innerAudioContext.src = this.srcFile
+      this.innerAudioContext.play()
     },
     titleInput(e) {
       this.title = e.detail.value
@@ -93,6 +89,15 @@ export default class Editor extends wepy.page {
   }
 
   onReady(e) {
+    this.innerAudioContext = wepy.createInnerAudioContext()
+    this.innerAudioContext.autoplay = false
+    this.innerAudioContext.onPlay(() => {
+      console.log('开始播放')
+    })
+    this.innerAudioContext.onError((res) => {
+      console.log(res.errMsg)
+      console.log(res.errCode)
+    })
   }
 
   onLoad(option) {
