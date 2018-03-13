@@ -1,12 +1,12 @@
 import wepy from 'wepy';
 
 let env = "-test" //-dev 或者 -test
-const apiMall = 'https://sujiefs.com/'
-//const apiMall = 'https://api.tangxinmao.com'
+// const apiMall = 'https://sujiefs.com/'
+// const apiMall = 'https://api.tangxinmao.com'
+const apiMall = 'http://localhost:3000'
 
 const wxRequest = async(params = {}, url) => {
     let data = params.query || {};
-    data.sign = SIGN;
     let res = await wepy.request({
         url: url,
         method: params.method || 'GET',
@@ -21,8 +21,8 @@ const wxRequest = async(params = {}, url) => {
  * @param  {[type]} params [description]
  * @return {[type]}        [description]
  */
-// const getVoiceList = (params) => wxRequest(params, apiMall + '/goods/list?cateidOne=1&cateidTwo=0&price=0&sales=2');
-const getVoiceList = (params) => {
+const getVoiceList = (params) => wxRequest(params, apiMall + '/topics.json');
+const getVoiceList2 = (params) => {
   let lllll = [
     {
       "marketPrice": 328,

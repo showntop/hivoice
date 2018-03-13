@@ -207,16 +207,12 @@
         }
       })
       console.log(json)
-      if (json.data.code === 0) {
-        that.voiceList = [...that.voiceList, ...json.data.result]
+      that.voiceList = [...that.voiceList, ...json.data.topics]
 
-        if (json.data.result.size === 0) { // 暂无数据
-          that.is_empty = true
-        }
-        that.$apply()
-      } else {
-        // tip.error(json.data.msg)
+      if (json.data.topics.size === 0) { // 暂无数据
+        that.is_empty = true
       }
+      that.$apply()
       that.showLoading = false
     }
   }
