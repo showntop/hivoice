@@ -3,7 +3,7 @@ import wepy from 'wepy';
 let env = "-test" //-dev 或者 -test
 // const apiMall = 'https://sujiefs.com/'
 // const apiMall = 'https://api.tangxinmao.com'
-const apiMall = 'http://localhost:3000'
+const apiMall = 'http://localhost:3000/api/v3'
 
 const wxRequest = async(params = {}, url) => {
     let data = params.query || {};
@@ -131,8 +131,8 @@ const getHomeDisvocerList = (params) => wxRequest(params, apiMall + '/api/mall/d
 const getGoodsList = (params) => wxRequest(params, apiMall + '/api/mall/searchGoodsList');
 
 //查询商品详情信息
-// const getSubject = (params) => wxRequest(params, apiMall + '/api/mall/goods');
-const getSubject = (params) => {
+const getSubject = (params) => wxRequest(params, apiMall + '/topics/'+params.path.id);
+const getSubject2 = (params) => {
   return {
     data: {
       code: 0,

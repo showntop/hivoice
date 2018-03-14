@@ -1,15 +1,15 @@
 <template>
   <scroll-view scroll-y="true" class="swiper-item-box">
     <view class="shop_item">
-      <navigator class="list" wx:for="{{list}}" wx:key="item" url="/pages/subject?id={{item.id}}&purchasetype={{purchasetype}}&special={{special}}">
+      <navigator class="list" wx:for="{{list}}" wx:key="item" url="/pages/subject?id={{item.id}}">
         <view class="image_box">
-          <image src="{{item.thumLogo}}"></image>
+          <image src="{{item.cover}}"></image>
         </view>
         <view class="goods">
-          <view class="product_name" wx:if="{{showTitle}}">{{item.name}}</view>
-          <view class="product_info">
-            <view class="price">{{item.node}}</view>
-            <view class="sale_num">收听{{item.saleCount}}次</view>
+          <view class="cube_name" wx:if="{{showTitle}}">{{item.title}}</view>
+          <view class="cube_info">
+            <view class="node">{{item.node_name}}</view>
+            <view class="listen_num">收听{{item.listen_count||1023}}次</view>
           </view>
         </view>
       </navigator>
@@ -72,7 +72,7 @@ export default class Higrid extends wepy.component {
       height: 345rpx;
     }
   }
-  .product_name {
+  .cube_name {
     color: #1a1a1a;
     font-size: 28rpx;
     overflow: hidden;
@@ -81,34 +81,24 @@ export default class Higrid extends wepy.component {
     -webkit-box-orient: vertical;
     word-break: break-all;
   }
-  .price {
+  .node {
     color: #de0000;
     font-size: 35rpx;
     font-weight: 600;
   }
-  .cost_price {
-    color: #666666;
-    font-size: 24rpx;
-    text-decoration: line-through;
-    font-weight: 600;
-  }
-  .sale_num {
+  .listen_num {
     color: #666666;
     font-size: 22rpx;
+    padding-left: 20rpx;
   }
   .goods {
     padding: 15rpx 12rpx;
   }
-  .product_info {
+  .cube_info {
     padding-top: 20rpx;
     display: flex;
-    align-items: flex-end;
-  }
-  .cost_price {
-    padding-left: 20rpx;
-  }
-  .sale_num {
-    padding-left: 20rpx;
+    align-items: center;
+    justify-content: space-between;
   }
 }
 

@@ -202,11 +202,10 @@
       let that = this
       const json = await api.getVoiceList({
         query: {
-          page: currentPage || 1,
+          page: currentPage || 0,
           size: size || 10
         }
       })
-      console.log(json)
       that.voiceList = [...that.voiceList, ...json.data.topics]
 
       if (json.data.topics.size === 0) { // 暂无数据

@@ -8,12 +8,12 @@
     <view class="detail-header">
       <audio poster="{{poster}}" name="{{subjectDetail.title}}" author="{{author}}" src="{{subjectDetail.source}}" id="myAudio" controls="{{false}}" loop></audio>
       <view class="title"><text>{{subjectDetail.title}}</text></view>
-      <image src="../images/icon_play_48.png" mode="aspectFit" class="icon icon_48" style=" {{playing?'display:block':'display:none'}}" @tap="switchPlayer"/>
-      <image src="../images/icon_stop_48.png" mode="aspectFit" class="icon icon_48" style=" {{playing?'display:none':'display:block'}}" @tap="switchPlayer"/>
+      <image src="../images/icon_play_48.png" mode="aspectFit" class="icon icon_48" style=" {{playing?'display:none':'display:block'}}" @tap="switchPlayer"/>
+      <image src="../images/icon_stop_48.png" mode="aspectFit" class="icon icon_48" style=" {{playing?'display:block':'display:none'}}" @tap="switchPlayer"/>
     </view>
 
     <view class="detail_info">
-      <text class="content">{{subjectDetail.info}}</text>
+      <text class="content">{{subjectDetail.body}}</text>
        
       <view class="share-box">
         <i class="iconfont icon-share"></i>
@@ -37,7 +37,7 @@ export default class Subject extends wepy.page {
   data = {
     subjectId: 0,
     subjectDetail: {},
-    playing: false
+    playing: true
   }
 
   components = {
@@ -52,6 +52,7 @@ export default class Subject extends wepy.page {
   }
 
   onLoad(option) {
+    this.subjectId = option.id
     this.getSubject()
   }
 
@@ -62,13 +63,12 @@ export default class Subject extends wepy.page {
     let that = this
     const json = await api.getSubject({
       query: {
+      },
+      path: {
         id: that.subjectId
       }
     })
-    if (json.data.code === 0) {
-      that.subjectDetail = json.data.result
-    } else {
-    }
+    that.subjectDetail = json.data.topic
     that.$apply()
   }
 }
