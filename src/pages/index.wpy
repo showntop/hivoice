@@ -121,7 +121,7 @@
 
     data = {
       currentPage: 0,
-      recorderBtnName: '漏一嘴',
+      recorderBtnName: '点我',
       bannerList: [],
       voiceList: [],
       showRecorder: false,
@@ -164,6 +164,8 @@
     events = {}
 
     onPullDownRefresh() {
+      this.currentPage = 0
+      this.voiceList = []
       this.fetchVoiceList()
     }
 

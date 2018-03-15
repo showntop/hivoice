@@ -24,7 +24,7 @@ export default class CharmButton extends wepy.component {
 
   methods = {
     tapMe() {
-      this.recorderBtnName = "漏一嘴"
+      this.recorderBtnName = "点我"
 
       let animation = wepy.createAnimation({
         duration: 1000,
