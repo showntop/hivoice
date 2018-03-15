@@ -6,8 +6,15 @@
     </view>
 
     <view class="detail-header">
-      <audio poster="{{poster}}" name="{{subjectDetail.title}}" author="{{author}}" src="{{subjectDetail.source}}" id="myAudio" controls="{{false}}" loop></audio>
-      <view class="title"><text>{{subjectDetail.title}}</text></view>
+      <view class="detail-profile">
+        <view class="title"><text>{{subjectDetail.title}}</text></view>
+        <view class="detail-icons">
+          <image src="../images/icon_favour_grey_16.png" class="niubi-icon"/>
+          <image src="../images/icon_comment_grey_16.png" class="niubi-icon"/>
+          <image src="../images/icon_share_grey_16.png" class="niubi-icon"/>
+          <image src="../images/icon_collect_grey_16.png" class="niubi-icon"/>
+        </view>
+      </view>
       <image src="../images/icon_play_48.png" mode="aspectFit" class="icon icon_48" style=" {{playing?'display:none':'display:block'}}" @tap="switchPlayer"/>
       <image src="../images/icon_stop_48.png" mode="aspectFit" class="icon icon_48" style=" {{playing?'display:block':'display:none'}}" @tap="switchPlayer"/>
     </view>
@@ -47,7 +54,8 @@ export default class Subject extends wepy.page {
 
   methods = {
     switchPlayer() {
-      audio.sw(this.subjectDetail)
+      this.playing = !this.playing
+      audio.sw(this.playing, this.subjectDetail)
     }
   }
 
@@ -60,6 +68,10 @@ export default class Subject extends wepy.page {
   }
 
   async getSubject() {
+    wepy.showLoading({
+      title: "加载中...",
+      mask: true
+    })
     let that = this
     const json = await api.getSubject({
       query: {
@@ -70,6 +82,8 @@ export default class Subject extends wepy.page {
     })
     that.subjectDetail = json.data.topic
     that.$apply()
+    wepy.hideLoading()
+    // audio.play(that.subjectDetail.source)
   }
 }
 
@@ -80,12 +94,25 @@ export default class Subject extends wepy.page {
   }
   .cover-image{
     width: 100%;
+    background-color: #CFCFCF;
   }
   .detail-header {
     display: flex;
     height: 50px;
     position: relative;
     align-items: center;
+    border-color: #EAEAEA;
+    border-width: 1px;
+    border-bottom-style: solid;
+  }
+  .detail-profile{
+    display: flex;
+    flex-direction: column;
+  }
+  .detail-icons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
   }
   .title {
     overflow: hidden;
@@ -101,6 +128,10 @@ export default class Subject extends wepy.page {
     .content {
       font-size: 35rpx;
     }
+  }
+  .niubi-icon {
+    width: 16px;
+    height: 16px;
   }
   .icon {
     position: absolute;

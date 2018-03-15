@@ -2,8 +2,6 @@ import wepy from 'wepy';
 
 const audioManager = wepy.getBackgroundAudioManager()
 
-var playing = false
-
 audioManager.onCanplay((res) => {
   console.log(res)
 })
@@ -35,24 +33,22 @@ audioManager.onWaiting((res) => {
   console.log(res)
 })
 
-const pause = async () => {
-  playing = false
+const pause = async (audioSrc) => {
+  audioManager.src = audioSrc
   audioManager.pause()
 }
 
-const play = async () => {
+const play = async (audioSrc) => {
+  audioManager.src = audioSrc
   audioManager.play()
-  playing = true
-  console.log("audioManager", audioManager)
 } 
 
-const sw = (param) => {
-	audioManager.src = param.source
-	if (playing === true) {
-	  pause(param)
-	} else {
-	  play(param)
-	}
+const sw = (to, audioSrc) => {
+  if (to === true) {
+    play(audioSrc)
+  } else {
+    pause(audioSrc)
+  }
 }
 
 module.exports = {
