@@ -29,6 +29,7 @@ export default class extends wepy.app {
       'pages/editor'
     ],
     window: {
+      enablePullDownRefresh: true,
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#e5e5e5',
       navigationBarTitleText: 'hivoice',

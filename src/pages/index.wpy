@@ -109,6 +109,7 @@
     config = {
       navigationBarTitleText: 'Hivoice'
     }
+
     components = {
       bottomLoadMore: BottomLoadMore,
       higrid: Higrid,
@@ -119,7 +120,7 @@
     mixins = [testMixin]
 
     data = {
-      // myRecordFile: "",
+      currentPage: 0,
       recorderBtnName: '漏一嘴',
       bannerList: [],
       voiceList: [],
@@ -162,12 +163,14 @@
 
     events = {}
 
+    onPullDownRefresh() {
+      this.fetchVoiceList()
+    }
+
     onLoad() {
-      console.log(this)
-      console.log(wepy)
       let that = this
       that.fetchVoiceList()
-      this.fetchBannerList()
+      that.fetchBannerList()
     }
 
     onReachBottom() {
@@ -199,11 +202,15 @@
     }
 
     async fetchVoiceList(currentPage, size) {
+      wepy.showLoading({
+        title: "加载中...",
+        mask: true
+      })
       let that = this
       const json = await api.getVoiceList({
         query: {
-          page: currentPage || 0,
-          size: size || 10
+          offset: (currentPage || 0) * (size || 10),
+          limit: size || 10
         }
       })
       that.voiceList = [...that.voiceList, ...json.data.topics]
@@ -213,6 +220,8 @@
       }
       that.$apply()
       that.showLoading = false
+      wepy.stopPullDownRefresh()
+      wepy.hideLoading()
     }
   }
 </script>
