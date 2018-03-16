@@ -7,16 +7,27 @@
 
     <view class="detail-header">
       <view class="detail-profile">
-        <view class="title"><text>{{subjectDetail.title}}</text></view>
+        <view class="title"><text>{{subjectDetail.title || '在你的世界里遨游'}}</text></view>
         <view class="detail-icons">
-          <image src="../images/icon_favour_grey_16.png" class="niubi-icon"/>
-          <image src="../images/icon_comment_grey_16.png" class="niubi-icon"/>
-          <image src="../images/icon_share_grey_16.png" class="niubi-icon"/>
-          <image src="../images/icon_collect_grey_16.png" class="niubi-icon"/>
+          <view class="niubi-icon-c"><image src="../images/icon_favour_grey_28.png" class="niubi-icon"/></view>
+          <view class="niubi-icon-c"><image src="../images/icon_comment_grey_28.png" class="niubi-icon"/></view>
+          <view class="niubi-icon-c"><image src="../images/icon_collect_grey_28.png" class="niubi-icon"/></view>
+          <view style="display: flex; width: 100%; justify-content: flex-end; align-items: flex-end;">
+            <text style="font-size: 8px;">2018.03.02 23:11</text>
+            <image src="../images/icon_share_grey_28.png" class="niubi-icon"/>
+          </view>
         </view>
       </view>
       <image src="../images/icon_play_48.png" mode="aspectFit" class="icon icon_48" style=" {{playing?'display:none':'display:block'}}" @tap="switchPlayer"/>
       <image src="../images/icon_stop_48.png" mode="aspectFit" class="icon icon_48" style=" {{playing?'display:block':'display:none'}}" @tap="switchPlayer"/>
+    </view>
+
+    <view style="display: flex; flex-direction: row; justify-content: space-around; border-bottom-style: solid;border-bottom-width: 1px; padding: 5px;">
+            
+      <view style="background-color: #F5FFFA; border-radius: 5px; width: 35px; height: 25px; text-align: center;">音乐</view>
+      <view style="background-color: #F5F5F5; border-radius: 5px; width: 35px; height: 25px;">声音</view>
+      <view style="background-color: #F5F5DC; border-radius: 5px; width: 35px; height: 25px;">情感</view>
+      <view style="background-color: #F0FFF0; border-radius: 5px; width: 35px; height: 25px;">英文</view>
     </view>
 
     <view class="detail_info">
@@ -42,7 +53,7 @@ export default class Subject extends wepy.page {
   }
 
   data = {
-    subjectId: 0,
+    subjectId: 1,
     subjectDetail: {},
     playing: true
   }
@@ -60,7 +71,7 @@ export default class Subject extends wepy.page {
   }
 
   onLoad(option) {
-    this.subjectId = option.id
+    this.subjectId = option.id || 1
     this.getSubject()
   }
 
@@ -104,6 +115,8 @@ export default class Subject extends wepy.page {
     border-color: #EAEAEA;
     border-width: 1px;
     border-bottom-style: solid;
+    padding-left: 10px;
+    padding-right: 10px;
   }
   .detail-profile{
     display: flex;
@@ -112,7 +125,22 @@ export default class Subject extends wepy.page {
   .detail-icons{
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  .niubi-icon-c {
+    margin-right: 15px;
+    border:1px solid grey;
+    border-radius: 8px;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .niubi-icon {
+    width: 12px;
+    height: 12px;
   }
   .title {
     overflow: hidden;
@@ -121,7 +149,6 @@ export default class Subject extends wepy.page {
     color: #333;
     text-overflow: ellipsis; 
     white-space: nowrap;
-    padding-left: 5px;
   }
   .detail_info {
     padding: 10px;
@@ -129,17 +156,13 @@ export default class Subject extends wepy.page {
       font-size: 35rpx;
     }
   }
-  .niubi-icon {
-    width: 16px;
-    height: 16px;
-  }
   .icon {
     position: absolute;
     right: 5px;
     top: 1px;
   }
   .icon_48 {
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
   }
 </style>
