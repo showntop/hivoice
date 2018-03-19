@@ -23,9 +23,9 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/editor',
       'pages/index',
       'pages/node',
+      'pages/editor',
       'pages/subject'
     ],
     window: {
@@ -51,30 +51,84 @@ export default class extends wepy.app {
     this.testAsync()
   }
 
-  sleep (s) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve('promise resolved')
-      }, s * 1000)
-    })
-  }
-
   async testAsync () {
-    const data = await this.sleep(3)
-    console.log(data)
-  }
+    // let that = this //  用户信息
+    let userSpecialInfo = wepy.getStorageSync('USER_SPECICAL_INFO') || {}
 
-  getUserInfo(cb) {
-    const that = this
-    if (this.globalData.userInfo) {
-      return this.globalData.userInfo
-    }
-    wepy.getUserInfo({
-      success (res) {
-        that.globalData.userInfo = res.userInfo
-        cb && cb(res.userInfo)
+    //  用户普通信息
+    let userInfo = wepy.getStorageSync('USER_INFO') || {}
+
+    //  如果信息过期
+    if ((!userSpecialInfo.openid || (userSpecialInfo.expires_in || Date.now()) < (Date.now() + 600)) && (!userInfo.nickName)) {
+      let res = await wepy.login()
+      if (res.code) {
+        // let d = that.globalData// 这里存储了appid、secret、token串
+        // 存储userInfo
+        let c = await wepy.getUserInfo()
+        wepy.setStorageSync('USER_INFO', c.userInfo)
+        console.log(c)
+        // 存储系统信息
+        let systemInfo = wepy.getSystemInfoSync()
+        wepy.setStorageSync('SYSTEM_INFO', systemInfo)
+        console.log(systemInfo)
+
+        // wxJsCode2Session({
+        //   query: {
+        //     jsCode: res.code,
+        //     nickName: c.userInfo.nickName
+        //   }
+        // }).then(resp => {
+        //   var rlt = resp.data
+        //   console.log("wxJsCode2Session..." + JSON.stringify(rlt))
+        //   if (rlt.result) {
+        //     var data = rlt.data
+        //     if (data.openid) {
+        //       let obj = {}
+        //       obj.openid = data.openid
+        //       obj.expires_in = Date.now() + data.expires_in
+        //       // 存储openid
+        //       wepy.setStorageSync('USER_SPECICAL_INFO', obj)
+        //     }
+        //   } else {
+        //     let obj = {}
+        //     obj.openid = "oeuj50KHMqsh5kYZYWQJuwmY5yG0"
+        //     obj.expires_in = "7200"
+        //     // 存储openid
+        //     wepy.setStorageSync('USER_SPECICAL_INFO', obj)
+        //   }
+        // })
+
+        // let url = 'https:// api.weixin.qq.com/sns/jscode2session?appid=' + d.appid + '&secret=' + d.secret + '&js_code=' + res.code + '&grant_type=authorization_code'
+
+        /* let b = await wepy.request({
+             url: url,
+             data: {},
+             method: 'POST',
+             header: {
+                 'content-Type': 'application/x-www-form-urlencoded'
+             }
+         })
+         if (b.data.openid) {
+             let obj = {}
+             obj.openid = b.data.openid
+             obj.expires_in = Date.now() + b.data.expires_in
+
+             // 存储openid
+             wepy.setStorageSync('USER_SPECICAL_INFO', obj)
+
+             // 存储userInfo
+             let c = await wepy.getUserInfo()
+             wepy.setStorageSync('USER_INFO', c.userInfo)
+
+             // 存储系统信息
+             let systemInfo = await wepy.getSystemInfoSync()
+             wepy.setStorageSync('SYSTEM_INFO', systemInfo)
+             console.log(b, '登陆成功')
+         } */
+      } else {
+        console.log('获取用户登录态失败！' + res.errMsg)
       }
-    })
+    }
   }
 }
 </script>
