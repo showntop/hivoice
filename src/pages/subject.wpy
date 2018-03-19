@@ -2,7 +2,7 @@
   <view class="container">
     <!--index.wxml-->
     <view class="cover">
-      <image src="{{subjectDetail.cover}}" data-src="{{subjectDetail.cover}}" class="cover-image"/>
+      <image src="{{subjectDetail.cover}}" data-src="{{subjectDetail.cover}}" class="image"/>
     </view>
 
     <view class="header">
