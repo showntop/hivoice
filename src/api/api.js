@@ -3,8 +3,8 @@ import wepy from 'wepy';
 let env = "-test" //-dev 或者 -test
 // const apiMall = 'https://sujiefs.com/'
 // const apiMall = 'https://api.tangxinmao.com'
-// const apiMall = 'http://localhost:3000/api/v3'
-const apiMall = 'https://voicer-2018.herokuapp.com/api/v3'
+const apiMall = 'http://localhost:3000/api/v3'
+// const apiMall = 'https://voicer-2018.herokuapp.com/api/v3'
 
 const wxRequest = async(params = {}, url) => {
     let data = params.query || {};
@@ -118,6 +118,11 @@ const getVoiceList2 = (params) => {
       result: lllll
     }
   }
+}
+
+const saveTopic = (params) => {
+  params = Object.assign({}, params, {method: 'POST'});
+  wxRequest(params, apiMall + '/topics');
 }
 
 //微信的jscode换取sessionKey
@@ -317,6 +322,7 @@ module.exports = {
   getVoiceList, getHomeDisvocerList,
   getGoodsList,
   getSubject,
+  saveTopic,
   wxJsCode2Session,
   user2session,
   userSginInfo,
