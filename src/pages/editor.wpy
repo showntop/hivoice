@@ -22,15 +22,16 @@
     }
 
     .btn-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
       position: fixed;
       bottom: 0px;
-      // width: 100%;
-      // height: 35px;
-      // background-color: black;
-      // display: flex;
-      // flex-direction: row;
-      // justify-content: flex-end;
-      // align-items: center;
+      left: 0px;
+      width: 100%;
+      height: 35px;
+      background-color: black;
     }
   }
 
@@ -43,8 +44,8 @@
 </style>
 
 <template>
-  <view class="mainer">
-      <view style="padding: 10px;">
+  <scroll-view class="mainer">
+      <view style="padding: 10px; margin-bottom: 40px;">
         <view class="section section_gap audio">
           <view class="play_mainer">
             <image src="../images/icon_play_sigle_blue_128.png" style="height: 20px; width: 20px;" @tap="playVoice"/>
@@ -78,20 +79,21 @@
           </view>
         </view>      
       </view>
-
+<!-- 
       <button type="primary" size="{{primarySize}}" loading="{{loading}}" plain="{{plain}}"
               disabled="{{disabled}}" bindtap="saveTopic"> primary </button>
       <button type="warn" size="{{warnSize}}" loading="{{loading}}" plain="{{plain}}"
               disabled="{{disabled}}" bindtap="warn"> warn </button>
 
+ -->
+      <view class="btn-container">
+        <view style="width: 80px; color: yellow; display: flex;" @tap="saveTopic">x取消</view>
 
-      <!-- <view class="btn-container">
-        <view style="width: 100px; color: yellow; background-color: red; display: flex;">x取消</view>
-        <view style="width: 100px; color: white; border-radius: 5px; background-color: red; display: flex; justify-content: center; align-items: center;" @tap="saveTopic">
-          <text>✓发布</text>
+        <view style="width: 80px; color: white; display: flex; justify-content: center; align-items: center;" @tap="saveTopic">
+          <text style="text-align: center;">✓发布</text>
         </view>
-      </view> -->
-  </view>
+      </view>
+  </scroll-view>
 </template>
 
 <script>
@@ -100,6 +102,11 @@ import wepy from 'wepy'
 import api from '../api/api'
 
 export default class Editor extends wepy.page {
+
+  config = {
+    navigationBarTitleText: '创造你的世界'
+  }
+
   props = {
   }
 
