@@ -1,7 +1,7 @@
 <template>
   <view class="charm-btn" 
     animation="{{animationData}}" 
-    @tap="tapMe" @longpress="longpressMe">{{name}}
+    @tap="tapMe">{{name}}
   </view>
 </template>
 <script>
@@ -15,6 +15,8 @@ export default class CharmButton extends wepy.component {
   }
 
   data = {
+    // shrinking: true,
+    blooming: false,
     animationData: {}
   }
 
@@ -24,39 +26,41 @@ export default class CharmButton extends wepy.component {
 
   methods = {
     tapMe() {
-      this.recorderBtnName = "点我"
+      if (this.blooming) {
+        this.recorderBtnName = "点我"
 
-      let animation = wepy.createAnimation({
-        duration: 1000,
-        timingFunction: 'ease'
-      })
+        let animation = wepy.createAnimation({
+          duration: 1000,
+          timingFunction: 'ease'
+        })
 
-      this.animation = animation
+        this.animation = animation
 
-      animation.scale(1, 1).rotate(0).step()
-
-      this.animationData = animation.export()
-
-      this.$emit('taped', 1, 2, 3, 4)
-    },
-    longpressMe() {
-      let animation = wepy.createAnimation({
-        duration: 2000,
-        timingFunction: 'ease'
-      })
-      console.log('hellow')
-      this.animation = animation
-
-      animation.scale(2, 2).rotate(45).step()
-
-      this.animationData = animation.export()
-
-      setTimeout(() => {
-        animation.translate(20).step()
+        animation.scale(1, 1).rotate(0).step()
         this.animationData = animation.export()
-        this.$apply()
-      }, 1000)
-      this.$emit('longpressed', 1, 2, 3, 4)
+
+        this.blooming = false
+        this.$emit('shrinking', 1, 2, 3, 4)
+      } else {
+        let animation = wepy.createAnimation({
+          duration: 2000,
+          timingFunction: 'ease'
+        })
+        this.animation = animation
+
+        animation.scale(2, 2).rotate(45).step()
+
+        this.animationData = animation.export()
+
+        setTimeout(() => {
+          animation.translate(20).step()
+          this.animationData = animation.export()
+          this.$apply()
+        }, 1000)
+
+        this.blooming = true
+        this.$emit('blooming', 1, 2, 3, 4)
+      }
     }
   }
 

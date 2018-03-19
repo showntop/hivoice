@@ -1,16 +1,24 @@
 <template>
-  <view class="voice-style" @tap="switchRecord">
-    <image class="bg-style" src="../images/icon_voice_speaking_bg_normal.png"></image>
-    
-    <image class="bg-style" animation="{{speakingAnimation}}" src="../images/voice_video_loading_0.png"></image>
-    <image class="bg-style" animation="{{speakingAnimation_1}}" src="../images/voice_video_loading_0.png"></image>
-    <image class="bg-style" animation="{{speakingAnimation_2}}" src="../images/voice_video_loading_0.png"></image>
+  <view class="mainer">
+    <view class="voice-style" @tap="switchRecord">
+      <image class="bg-style" src="../images/icon_voice_speaking_bg_normal.png"></image>
+      
+      <image class="bg-style" animation="{{speakingAnimation}}" src="../images/voice_video_loading_0.png"></image>
+      <image class="bg-style" animation="{{speakingAnimation_1}}" src="../images/voice_video_loading_0.png"></image>
+      <image class="bg-style" animation="{{speakingAnimation_2}}" src="../images/voice_video_loading_0.png"></image>
 
-    <image class="sound-style" src="../images/icon_voice_speech_sound_1.png"></image>
-    <image style="{{j==2?'display:block': 'display:none'}}" class="sound-style" src="../images/icon_voice_speech_sound_2.png"></image>
-    <image style="{{j==3?'display:block': 'display:none'}}" class="sound-style" src="../images/icon_voice_speech_sound_3.png"></image>
-    <image style="{{j==4?'display:block': 'display:none'}}" class="sound-style" src="../images/icon_voice_speech_sound_4.png"></image>
-    <image style="{{j==5?'display:block': 'display:none'}}" class="sound-style" src="../images/icon_voice_speech_sound_5.png"></image>
+      <image class="sound-style" src="../images/icon_voice_speech_sound_1.png"></image>
+      <image style="{{j==2?'display:block': 'display:none'}}" class="sound-style" src="../images/icon_voice_speech_sound_2.png"></image>
+      <image style="{{j==3?'display:block': 'display:none'}}" class="sound-style" src="../images/icon_voice_speech_sound_3.png"></image>
+      <image style="{{j==4?'display:block': 'display:none'}}" class="sound-style" src="../images/icon_voice_speech_sound_4.png"></image>
+      <image style="{{j==5?'display:block': 'display:none'}}" class="sound-style" src="../images/icon_voice_speech_sound_5.png"></image>
+    </view>
+    <view class="worder">
+      <text style="color: white; font-size: 20px; font-weight: bold;">跟我一起念：</text>
+      <text style="color: white;">
+        “床前明月光，疑是地上霜，举头望明月，低头思故乡”
+      </text>
+    </view>
   </view>
 </template>
 <script>
@@ -156,6 +164,17 @@ export default class Recorder extends wepy.component {
 
 </script>
 <style lang="less">
+  .mainer {
+    display: flex;
+    flex-direction: column;
+    .worder {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-top: 200px;
+      align-items: center;
+    }
+  }
   .voice-style {
     display: flex;
     position: relative;

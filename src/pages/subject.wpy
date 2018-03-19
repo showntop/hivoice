@@ -14,7 +14,7 @@
         <view class="niubi-icon-c"><image src="../images/icon_collect_grey_28.png" class="niubi-icon"/></view>
         
         <view class="header-time">
-          <text style="font-size: 8px;">2018.03.02 23:11</text>
+          <text style="font-size: 8px;">{{subjectDetail.created_at}}</text>
           <image src="../images/icon_share_grey_28.png" class="niubi-icon"  style="margin-left: 5px;"/>
         </view>
       </view>

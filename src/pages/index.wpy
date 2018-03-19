@@ -42,7 +42,7 @@
   position: fixed;
 
   .recorder {
-    margin-top: 60%;
+    margin-top: 30%;
   }
 }
 
@@ -77,10 +77,8 @@
         <view class="nav_text">搞笑</view>
       </navigator>
     </view>
-    <!--发现好商品模块-->
     <view class="subject_grid">
-      <!--矩阵商品列表模块-->
-      <higrid :purchasetype.sync="purchasetype" :list.sync="voiceList"></higrid>
+      <higrid :list.sync="voiceList"></higrid>
       <!--加载更多时动画-->
       <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
       <!--暂无数据显示-->
@@ -90,7 +88,7 @@
       <recorder class="recorder" @stoped.user="handleRecord"/>
       <!-- <recorder class="recorder" :twoWayRecordFile="myRecordFile"/> -->
     </view>
-    <charmButton :name.sync="recorderBtnName" @longpressed.user="triggerRecord" @taped.user="stopRecord"></charmButton>
+    <charmButton :name.sync="recorderBtnName" @blooming.user="triggerRecord" @shrinking.user="stopRecord"></charmButton>
   </view>
 </template>
 
@@ -147,6 +145,7 @@
       },
       stopRecord(res) {
         if (this.showRecorder) {
+          this.recorderBtnName = '点我'
           this.showRecorder = false
           this.$invoke('recorder', 'stopRecord', 'someArgs')
         }

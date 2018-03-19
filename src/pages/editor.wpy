@@ -1,29 +1,89 @@
+<style lang="less">
+  .mainer {
+    // width: 200%;
+    position: relative;
+    height: 100%;
+    .audio {
+      display: flex;
+      flex-direction: row;
+
+      .play_mainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 70px;
+        width: 36px;
+        background-color: grey;
+      }
+    }
+
+    .words-editor {
+      padding-top: 20px;
+    }
+
+    .btn-area {
+      position: fixed;
+      bottom: 0px;
+      width: 100%;
+      height: 35px;
+      background-color: black;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+    }
+  }
+
+  .section {
+    // padding: 10px;
+    margin-top: 10px;
+  }
+
+
+</style>
+
 <template>
-  <view>
+  <view class="mainer">
     <form bindsubmit="formSubmit" bindreset="formReset">
-      <view class="section section_gap scale">
-       <!--  <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/>
-        <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/>
-        <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/>
-        <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/>
-        <image src="../images/image_audio_line_128.png" class="audio_img" mode="aspectFit"/> -->
-        <audio style="width: 100%;" poster="{{poster}}" name="{{title}}" author="{{author}}" src="{{src}}" id="myAudio" controls loop @tap="playVoice"></audio>
-      </view>
-      <view class="section section_gap" style="display:flex; justify-content: center; align-items: center;">
-        <image src="{{cover}}" style="width: 90%; height: 160px;" @tap="chooseCover"/>
-      </view>      
-      <view class="section section_gap">
-        <view class="section__title">标题</view>
-        <input name="input" type="text" @input="titleInput" style="border-style: solid;  border-top: 0px; border-left: 0px; border-right: 0px;" />
-      </view>
-      <view class="section section_gap">
-        <view class="section__info">说明/描述</view>
-        <textarea name="textarea" @input="infoInput" style="border-style: solid;" />
+      <view style="padding: 10px;">
+        <view class="section section_gap audio">
+          <!-- <audio style="width: 300;" poster="{{cover}}" name="{{title}}" author="{{author}}" src="{{src}}" id="myAudio" controls="false" loop @tap="playVoice"></audio> -->
+          <view class="play_mainer">
+            <image src="../images/icon_play_sigle_blue_128.png" style="height: 20px; width: 20px;"/>
+          </view>
+          <image src="../images/image_audio_waves.png" style="height: 70px;"></image>
+        </view>
+
+        <view class="words-editor">
+          <view class="section section_gap" style="display: flex; flex-direction: row;">
+            <view style="display:flex; justify-content: center; align-items: center;">
+              <image src="{{cover}}" style="width: 100px; height: 100px;" @tap="chooseCover"/>
+            </view>
+            <view class="section section_gap" style="margin-left: 10px;">
+              <input name="input" type="text" @input="titleInput" style="border-bottom-style: solid; border-color: grey; border-width: 1px;" placeholder="输入一个标题"/>
+              <picker mode="multiSelector" bindchange="bindRegionChange" value="{{multiIndex}}" range="{{multiArray}}" style="margin-top: 20px;">
+                <view class="picker">
+                  当前选择：{{multiArray[0][multiIndex[0]]}}，{{multiArray[1][multiIndex[1]]}}
+                </view>
+              </picker>
+            </view>
+          </view>
+
+          <view class="section section_gap" style="border-bottom-style: solid; border-color: grey; border-width: 1px; padding-top: 10px; padding-bottom: 5px;">
+            <view style="width:30px; height:20px; font-size: 10px; background-color: #EEEED1;  display: flex; justify-content: center; align-items: center; border-radius: 2px;">
+              <text>+标签</text>
+            </view>
+          </view>
+
+          <view class="section section_gap">
+            <textarea name="textarea" @input="infoInput" style="border-style: solid; border-color: grey; border-width: 1px;" placeholder="写一段奇妙的文字啊"/>
+          </view>
+        </view>      
       </view>
 
       <view class="btn-area">
-        <button formType="submit">Submit</button>
-        <button formType="reset">Reset</button>
+        <view formType="reset" style="width: 100px; color: yellow;">x取消</view>
+        <view formType="submit" style="width: 100px; color: white;">√发布</view>
       </view>
     </form>
   </view>
@@ -43,7 +103,9 @@ export default class Editor extends wepy.page {
     info: "",
     srcFile: "",
     cover: "../images/no_image.png",
-    innerAudioContext: null
+    innerAudioContext: null,
+    multiArray: [['生活', '搞笑', '世界', '情感'], ['风声与代码', '治愈']],
+    multiIndex: [0, 0, 0]
   }
 
   components = {
@@ -53,7 +115,6 @@ export default class Editor extends wepy.page {
 
   methods = {
     playVoice(e) {
-      console.log("play", this.srcFile)
       this.innerAudioContext.src = this.srcFile
       this.innerAudioContext.play()
     },
@@ -70,18 +131,14 @@ export default class Editor extends wepy.page {
       wepy.chooseImage({
         count: 1, // 设置最多可以选择的图片张数，默认9,如果我们设置了多张,那么接收时//就不在是单个变量了,
         sizeType: ['original', 'compressed'], // original 原图，compressed 压缩图，默认二者都有
-        sourceType: ['album', 'camera'], // album 从相册选图，camera 使用相机，默认二者都有
-        success: (res) => {
-          let tempFilePaths = res.tempFilePaths // 获取成功,将获取到的地址赋值给临时变量
-          that.cover = tempFilePaths
-          that.$apply()
-        },
-        fail: function(res) {
-          // fail
-        },
-        complete: function(res) {
-          // complete
-        }
+        sourceType: ['album', 'camera'] // album 从相册选图，camera 使用相机，默认二者都有
+      }).then(res => {
+        let tempFilePaths = res.tempFilePaths // 获取成功,将获取到的地址赋值给临时变量
+        that.cover = tempFilePaths
+        // console.log(tempFilePaths)
+        that.$apply()
+      }).catch((res) => {
+        console.log(res)
       })
     }
   }
@@ -106,25 +163,3 @@ export default class Editor extends wepy.page {
   }
 }
 </script>
-
-<style lang="less">
-  .scale {
-    margin: 10px;
-    height: 100px;
-    border-top: 0px;
-    border-bottom: 1px;
-    border-style: solid;
-    border-left: 0px;
-    border-right: 0px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-
-    .audio_img{
-    }
-  }
-  .section {
-    padding: 10px;
-  }
-</style>
