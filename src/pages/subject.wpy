@@ -1,42 +1,37 @@
 <template>
-  <view class="detail-container">
+  <view class="container">
     <!--index.wxml-->
-    <view class="cover-container">
+    <view class="cover">
       <image src="{{subjectDetail.cover}}" data-src="{{subjectDetail.cover}}" class="cover-image"/>
     </view>
 
-    <view class="detail-header">
-      <view class="detail-profile">
-        <view class="title"><text>{{subjectDetail.title || '在你的世界里遨游'}}</text></view>
-        <view class="detail-icons">
-          <view class="niubi-icon-c"><image src="../images/icon_favour_grey_28.png" class="niubi-icon"/></view>
-          <view class="niubi-icon-c"><image src="../images/icon_comment_grey_28.png" class="niubi-icon"/></view>
-          <view class="niubi-icon-c"><image src="../images/icon_collect_grey_28.png" class="niubi-icon"/></view>
-          <view style="display: flex; width: 100%; justify-content: flex-end; align-items: flex-end;">
-            <text style="font-size: 8px;">2018.03.02 23:11</text>
-            <image src="../images/icon_share_grey_28.png" class="niubi-icon"/>
-          </view>
+    <view class="header">
+      <view class="title"><text>{{subjectDetail.title || '在你的世界里遨游'}}</text></view>
+
+      <view class="detail-icons">
+        <view class="niubi-icon-c"><image src="../images/icon_favour_grey_28.png" class="niubi-icon"/></view>
+        <view class="niubi-icon-c"><image src="../images/icon_comment_grey_28.png" class="niubi-icon"/></view>
+        <view class="niubi-icon-c"><image src="../images/icon_collect_grey_28.png" class="niubi-icon"/></view>
+        
+        <view class="header-time">
+          <text style="font-size: 8px;">2018.03.02 23:11</text>
+          <image src="../images/icon_share_grey_28.png" class="niubi-icon"  style="margin-left: 5px;"/>
         </view>
       </view>
-      <image src="../images/icon_play_48.png" mode="aspectFit" class="icon icon_48" style=" {{playing?'display:none':'display:block'}}" @tap="switchPlayer"/>
-      <image src="../images/icon_stop_48.png" mode="aspectFit" class="icon icon_48" style=" {{playing?'display:block':'display:none'}}" @tap="switchPlayer"/>
+      <image src="../images/icon_play_grey_128.png" mode="aspectFit" class="icon icon_48" style=" {{playing?'display:none':'display:block'}}" @tap="switchPlayer"/>
+      <image src="../images/icon_pause_grey_128.png" mode="aspectFit" class="icon icon_48" style=" {{playing?'display:block':'display:none'}}" @tap="switchPlayer"/>
     </view>
 
-    <view style="display: flex; flex-direction: row; justify-content: space-around; border-bottom-style: solid;border-bottom-width: 1px; padding: 5px;">
-            
-      <view style="background-color: #F5FFFA; border-radius: 5px; width: 35px; height: 25px; text-align: center;">音乐</view>
-      <view style="background-color: #F5F5F5; border-radius: 5px; width: 35px; height: 25px;">声音</view>
-      <view style="background-color: #F5F5DC; border-radius: 5px; width: 35px; height: 25px;">情感</view>
-      <view style="background-color: #F0FFF0; border-radius: 5px; width: 35px; height: 25px;">英文</view>
+    <view class="tagger">
+      <view class="tag" style="background-color: #F5FFFA;">音乐</view>
+      <view class="tag" style="background-color: #E8E8E8;">声音</view>
+      <view class="tag" style="background-color: #F5F5DC;">情感</view>
+      <view class="tag" style="background-color: #F0FFF0;">英文</view>
     </view>
 
-    <view class="detail_info">
+    <view class="info">
+      <view class="indicator"></view>
       <text class="content">{{subjectDetail.body}}</text>
-       
-      <view class="share-box">
-        <i class="iconfont icon-share"></i>
-        <text>分享</text>
-      </view>
     </view>
 
   </view>
@@ -100,69 +95,113 @@ export default class Subject extends wepy.page {
 
 </script>
 <style lang="less">
-  .detail-container{
+  .container{
     height: 100%;
+    .cover {
+      .image {
+        width: 100%;
+        background-color: #CFCFCF;
+      }
+    }
+
+    .info {
+      .content {
+        // font-size: 26rpx;
+        padding: 10px;
+      }
+    }
   }
-  .cover-image{
-    width: 100%;
-    background-color: #CFCFCF;
-  }
-  .detail-header {
+
+  .header {
     display: flex;
-    height: 50px;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 56px;
     position: relative;
-    align-items: center;
     border-color: #EAEAEA;
     border-width: 1px;
     border-bottom-style: solid;
     padding-left: 10px;
     padding-right: 10px;
+
+    .title {
+      overflow: hidden;
+      width: 80%;
+      font-size: 45rpx;
+      color: #333;
+      text-overflow: ellipsis; 
+      white-space: nowrap;
+    }
+
+    .header-time {
+      display: flex; 
+      width: 100%; 
+      justify-content: flex-end; 
+      align-items: flex-end;
+      font-style: italic;
+    }
+
+    .detail-icons{
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: flex-end;
+      padding-bottom: 5px;
+    }
   }
-  .detail-profile{
+
+  .tagger {
+    display: flex; 
+    flex-direction: row; 
+    justify-content: space-around; 
+    border-color: #EAEAEA;
+    border-bottom-style: solid;
+    border-bottom-width: 1px; 
+    padding: 5px;
+  }
+
+  .tag {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px; 
+    width: 45px; 
+    height: 30px; 
+    text-align: center;
   }
-  .detail-icons{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
+
+  .indicator {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 30px;
+    height: 6px;
+    background-color: black;
   }
+
   .niubi-icon-c {
     margin-right: 15px;
     border:1px solid grey;
     border-radius: 8px;
-    width: 16px;
-    height: 16px;
     display: flex;
     justify-content: center;
     align-items: center;
   }
+
   .niubi-icon {
     width: 12px;
     height: 12px;
   }
-  .title {
-    overflow: hidden;
-    width: 80%;
-    font-size: 45rpx;
-    color: #333;
-    text-overflow: ellipsis; 
-    white-space: nowrap;
-  }
-  .detail_info {
-    padding: 10px;
-    .content {
-      font-size: 35rpx;
-    }
-  }
+
   .icon {
     position: absolute;
+    background-color: white;
+    border-radius: 24px;
     right: 5px;
-    top: 1px;
+    top: -30px;
   }
+
   .icon_48 {
-    width: 42px;
-    height: 42px;
+    width: 48px;
+    height: 48px;
   }
 </style>
