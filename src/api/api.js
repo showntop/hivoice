@@ -126,7 +126,10 @@ const saveTopic = (params) => {
 }
 
 //微信的jscode换取sessionKey
-const wxJsCode2Session = (params) => wxRequest(params, apiMall + "/api/wechat/jscode2session");
+const wxJsCode2Session = (params) => {
+  params = Object.assign({}, params, {method: 'POST'});
+  wxRequest(params, apiMall + "/wechat/login");
+}
 const user2session = (params) => wxRequest(params, apiMall + "/api/wechat/user2session?jsoncallback=?");
 
 //商品接口---begin

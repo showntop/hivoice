@@ -20,6 +20,8 @@ page {
 import wepy from 'wepy'
 import 'wepy-async-function'
 
+import api from './api/api'
+
 export default class extends wepy.app {
   config = {
     pages: [
@@ -72,31 +74,34 @@ export default class extends wepy.app {
         wepy.setStorageSync('SYSTEM_INFO', systemInfo)
         console.log(systemInfo)
 
-        // wxJsCode2Session({
-        //   query: {
-        //     jsCode: res.code,
-        //     nickName: c.userInfo.nickName
-        //   }
-        // }).then(resp => {
-        //   var rlt = resp.data
-        //   console.log("wxJsCode2Session..." + JSON.stringify(rlt))
-        //   if (rlt.result) {
-        //     var data = rlt.data
-        //     if (data.openid) {
-        //       let obj = {}
-        //       obj.openid = data.openid
-        //       obj.expires_in = Date.now() + data.expires_in
-        //       // 存储openid
-        //       wepy.setStorageSync('USER_SPECICAL_INFO', obj)
-        //     }
-        //   } else {
-        //     let obj = {}
-        //     obj.openid = "oeuj50KHMqsh5kYZYWQJuwmY5yG0"
-        //     obj.expires_in = "7200"
-        //     // 存储openid
-        //     wepy.setStorageSync('USER_SPECICAL_INFO', obj)
-        //   }
-        // })
+        api.wxJsCode2Session({
+          query: {
+            jsCode: res.code,
+            encryptedData: c.encryptedData,
+            iv: c.iv
+          }
+        }).then(resp => {
+          var rlt = resp.data
+          console.log("wxJsCode2Session..." + JSON.stringify(rlt))
+          if (rlt.result) {
+            var data = rlt.data
+            if (data.openid) {
+              let obj = {}
+              obj.openid = data.openid
+              obj.expires_in = Date.now() + data.expires_in
+              // 存储openid
+              wepy.setStorageSync('USER_SPECICAL_INFO', obj)
+            }
+          } else {
+            let obj = {}
+            obj.openid = "oeuj50KHMqsh5kYZYWQJuwmY5yG0"
+            obj.expires_in = "7200"
+            // 存储openid
+            wepy.setStorageSync('USER_SPECICAL_INFO', obj)
+          }
+        }).cache(resp => {
+          console.log(resp)
+        })
 
         // let url = 'https:// api.weixin.qq.com/sns/jscode2session?appid=' + d.appid + '&secret=' + d.secret + '&js_code=' + res.code + '&grant_type=authorization_code'
 
