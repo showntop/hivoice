@@ -3,7 +3,8 @@ import wepy from 'wepy';
 let env = "-test" //-dev 或者 -test
 // const apiMall = 'https://sujiefs.com/'
 // const apiMall = 'https://api.tangxinmao.com'
-const apiMall = 'http://localhost:3000/api/v3'
+const apiMall = 'http://10.58.84.196:3000/api/v3'
+const Mall = 'http://10.58.84.196:3000'
 // const apiMall = 'https://voicer-2018.herokuapp.com/api/v3'
 
 const wxRequest = async(params = {}, url) => {
@@ -23,6 +24,8 @@ const wxRequest = async(params = {}, url) => {
  * @return {[type]}        [description]
  */
 const getVoiceList = (params) => wxRequest(params, apiMall + '/topics.json');
+const getNodeList = (params) => wxRequest(params, apiMall + '/nodes.json');
+const getUptoken = (params) => wxRequest(params, Mall + '/uptokens.json');
 const getVoiceList2 = (params) => {
   let lllll = [
     {
@@ -122,13 +125,13 @@ const getVoiceList2 = (params) => {
 
 const saveTopic = (params) => {
   params = Object.assign({}, params, {method: 'POST'});
-  wxRequest(params, apiMall + '/topics');
+  return wxRequest(params, apiMall + '/topics');
 }
 
 //微信的jscode换取sessionKey
 const wxJsCode2Session = (params) => {
   params = Object.assign({}, params, {method: 'POST'});
-  wxRequest(params, apiMall + "/wechat/login");
+  return wxRequest(params, apiMall + "/wechat/login");
 }
 const user2session = (params) => wxRequest(params, apiMall + "/api/wechat/user2session?jsoncallback=?");
 
@@ -324,7 +327,9 @@ module.exports = {
   hostGoodsList,
   getVoiceList, getHomeDisvocerList,
   getGoodsList,
+  getNodeList,
   getSubject,
+  getUptoken,
   saveTopic,
   wxJsCode2Session,
   user2session,

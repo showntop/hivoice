@@ -54,86 +54,46 @@ export default class extends wepy.app {
   }
 
   async testAsync () {
-    // let that = this //  用户信息
-    let userSpecialInfo = wepy.getStorageSync('USER_SPECICAL_INFO') || {}
-
-    //  用户普通信息
+    let userTokenInfo = wepy.getStorageSync('USER_TOKEN_INFO') || {}
     let userInfo = wepy.getStorageSync('USER_INFO') || {}
 
-    //  如果信息过期
-    if ((!userSpecialInfo.openid || (userSpecialInfo.expires_in || Date.now()) < (Date.now() + 600)) && (!userInfo.nickName)) {
-      let res = await wepy.login()
-      if (res.code) {
-        // let d = that.globalData// 这里存储了appid、secret、token串
-        // 存储userInfo
-        let c = await wepy.getUserInfo()
-        wepy.setStorageSync('USER_INFO', c.userInfo)
-        console.log(c)
-        // 存储系统信息
-        let systemInfo = wepy.getSystemInfoSync()
-        wepy.setStorageSync('SYSTEM_INFO', systemInfo)
-        console.log(systemInfo)
-
-        api.wxJsCode2Session({
-          query: {
-            jsCode: res.code,
-            encryptedData: c.encryptedData,
-            iv: c.iv
-          }
-        }).then(resp => {
-          var rlt = resp.data
-          console.log("wxJsCode2Session..." + JSON.stringify(rlt))
-          if (rlt.result) {
-            var data = rlt.data
-            if (data.openid) {
-              let obj = {}
-              obj.openid = data.openid
-              obj.expires_in = Date.now() + data.expires_in
-              // 存储openid
-              wepy.setStorageSync('USER_SPECICAL_INFO', obj)
-            }
-          } else {
-            let obj = {}
-            obj.openid = "oeuj50KHMqsh5kYZYWQJuwmY5yG0"
-            obj.expires_in = "7200"
-            // 存储openid
-            wepy.setStorageSync('USER_SPECICAL_INFO', obj)
-          }
-        }).cache(resp => {
-          console.log(resp)
-        })
-
-        // let url = 'https:// api.weixin.qq.com/sns/jscode2session?appid=' + d.appid + '&secret=' + d.secret + '&js_code=' + res.code + '&grant_type=authorization_code'
-
-        /* let b = await wepy.request({
-             url: url,
-             data: {},
-             method: 'POST',
-             header: {
-                 'content-Type': 'application/x-www-form-urlencoded'
-             }
-         })
-         if (b.data.openid) {
-             let obj = {}
-             obj.openid = b.data.openid
-             obj.expires_in = Date.now() + b.data.expires_in
-
-             // 存储openid
-             wepy.setStorageSync('USER_SPECICAL_INFO', obj)
-
-             // 存储userInfo
-             let c = await wepy.getUserInfo()
-             wepy.setStorageSync('USER_INFO', c.userInfo)
-
-             // 存储系统信息
-             let systemInfo = await wepy.getSystemInfoSync()
-             wepy.setStorageSync('SYSTEM_INFO', systemInfo)
-             console.log(b, '登陆成功')
-         } */
-      } else {
-        console.log('获取用户登录态失败！' + res.errMsg)
-      }
+    // 如果信息未过期
+    if (userTokenInfo.token) {
+      this.globalData.userInfo = Object.assign({}, userInfo, userTokenInfo)
+      console.log(this.globalData.userInfo)
+      return
     }
+
+    let res = await wepy.login()
+    if (!res.code) {
+      console.log('获取用户登录态失败！' + res.errMsg)
+      return
+    }
+
+    // let d = that.globalData// 这里存储了appid、secret、token串
+    // 存储userInfo
+    let user = await wepy.getUserInfo()
+
+    const resp = await api.wxJsCode2Session({
+    // api.wxJsCode2Session({
+      query: {
+        jsCode: res.code,
+        encryptedData: user.encryptedData,
+        iv: user.iv
+      }
+    })
+
+    if (resp.data) {
+      wepy.setStorageSync('USER_TOKEN_INFO', resp.data)
+      wepy.setStorageSync('USER_INFO', user.userInfo)
+
+      this.globalData.userInfo = Object.assign({}, user.userInfo, resp.data)
+    }
+    console.log(this.globalData)
+    // 存储系统信息
+    let systemInfo = wepy.getSystemInfoSync()
+    wepy.setStorageSync('SYSTEM_INFO', systemInfo)
+    console.log(systemInfo)
   }
 }
 </script>

@@ -23,6 +23,8 @@
 </template>
 <script>
 import wepy from 'wepy'
+import qiniuUploader from "../utility/qiniuUploader"
+import api from '../api/api'
 
 const options = {
   duration: 10000,
@@ -37,8 +39,8 @@ const recorderManager = wepy.getRecorderManager()
 
 export default class Recorder extends wepy.component {
   props = {
-    recordFile: String
-    // twoWayRecordFile: {
+    voiceUrl: String
+    // twoWayvoiceUrl: {
     //   type: String,
     //   default: 'nothing',
     //   twoWay: true
@@ -47,11 +49,14 @@ export default class Recorder extends wepy.component {
 
   data = {
     j: 1,
-    recordFile: "",
-    // twoWayRecordFile: "",
+    voiceUrl: "",
+    // twoWayvoiceUrl: "",
     speaking: false,
     speakingAnimation: {},
-    speakingAnimation_1: {}
+    speakingAnimation_1: {},
+    uptoken: "",
+    upkey: "",
+    updomain: ""
   }
 
   events = {
@@ -71,6 +76,7 @@ export default class Recorder extends wepy.component {
   }
 
   onLoad() {
+    this.fetchUptoken()
     console.log("load")
     recorderManager.onStart(() => {
       console.log('recorder start')
@@ -82,16 +88,32 @@ export default class Recorder extends wepy.component {
       console.log('recorder pause')
     })
     recorderManager.onStop((res) => {
-      this.recordFile = res.tempFilePath
-      // this.twoWayRecordFile = res.tempFilePath
-      this.$apply()
-      this.$emit("stoped", res)
-      console.log('recorder stop', res)
+      console.log(res)
+      // this.twoWayvoiceUrl = res.tempFilePath
+      // 交给七牛上传
+      qiniuUploader.upload(res.tempFilePath, (resp) => {
+        this.voiceUrl = resp.imageURL
+        this.$apply()
+        this.$emit("stoped", res)
+        console.log('recorder stop', res)
+      }, (error) => {
+        console.log('error: ' + error)
+      }, {
+        region: 'SCN',
+        domain: "http://" + this.updomain, // // bucket 域名，下载资源时用到。如果设置，会在 success callback 的
+        uptoken: this.uptoken, // 由其他程序生成七牛 uptoken
+        uptokenURL: 'UpTokenURL.com/uptoken' // 从指定 url 通过 HTTP GET 获取 uptoken，返回的格式必须是 json 且包含 uptoken 字段，例如： {"uptoken": "[yourTokenString]"}
+        // uptokenFunc: => {return '[yourTokenString]'}
+      }, (resp) => {
+        console.log('上传进度', res.progress)
+        console.log('已经上传的数据长度', res.totalBytesSent)
+        console.log('预期需要上传的数据总长度', res.totalBytesExpectedToSend)
+      })
     })
     recorderManager.onFrameRecorded((res) => {
       const { frameBuffer } = res
       // this.voiceFilePath = res.tempFilePath
-      // this.twoWayRecordFile = res.tempFilePath
+      // this.twoWayvoiceUrl = res.tempFilePath
       // this.$apply()
       console.log('frameBuffer.byteLength', frameBuffer.byteLength)
     })
@@ -99,6 +121,25 @@ export default class Recorder extends wepy.component {
       console.log('recorder error', res)
       this.$parent.getUserInfo()
     })
+  }
+
+  async fetchUptoken() {
+    wepy.showLoading({
+      title: "加载中...",
+      mask: true
+    })
+    const json = await api.getUptoken()
+    if (json.statusCode !== 200) {
+      wepy.showToast({
+        title: json.data.message,
+        icon: 'none'
+      })
+    }
+    this.uptoken = json.data.token
+    this.upkey = json.data.key
+    this.updomain = json.data.domain
+    this.$apply()
+    wepy.hideLoading()
   }
 
   startRecord() {
