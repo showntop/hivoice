@@ -81,7 +81,7 @@ export default class Subject extends wepy.page {
     })
     that.subjectDetail = resp.topic
     that.$apply()
-    // audio.play(that.subjectDetail.source)
+    audio.play(that.subjectDetail.source)
   }
 }
 

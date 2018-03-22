@@ -2,8 +2,8 @@ import wepy from 'wepy';
 
 let env = "-test" //-dev 或者 -test
 
-const voice = 'http://10.58.84.196:3000'
-// const voice = 'https://voicer-2018.herokuapp.com'
+// const voice = 'http://10.58.84.196:3000'
+const voice = 'https://voicer-2018.herokuapp.com'
 
 const voiceApi = voice + '/api/v3'
 
@@ -24,15 +24,15 @@ const wxRequest = async(params = {}, url) => {
       header: { 'Content-Type': 'application/json' },
   });
 
-  if (needLoading) {
-    wepy.hideLoading()
-  }
-
   if (res.statusCode != 200) {
     wepy.showToast({
       title: JSON.stringify(res),
       icon: 'none'
     })
+  }
+
+  if (needLoading) {
+    wepy.hideLoading()
   }
   return res.data;
 };

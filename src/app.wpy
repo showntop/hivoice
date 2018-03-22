@@ -83,11 +83,11 @@ export default class extends wepy.app {
       }
     })
 
-    if (resp.data) {
-      wepy.setStorageSync('USER_TOKEN_INFO', resp.data)
+    if (resp.token) {
+      wepy.setStorageSync('USER_TOKEN_INFO', resp.token)
       wepy.setStorageSync('USER_INFO', user.userInfo)
 
-      this.globalData.userInfo = Object.assign({}, user.userInfo, resp.data)
+      this.globalData.userInfo = Object.assign({}, user.userInfo, resp.token)
     }
     console.log(this.globalData)
     // 存储系统信息
