@@ -7,11 +7,11 @@
             <view class="img-box">
               <image src="../images/icon_play_white_48.png" style="{{playingItem == item.id?'display:none':'display:block'}}" @tap.stop="switchPlayer('play',{{item}})" class="img-font"/>
               <image src="../images/icon_stop_white_48.png" style="{{playingItem == item.id?'display:block':'display:none'}}" @tap.stop="switchPlayer('stop',{{item}})" class="img-font"/>
-              <image src="{{item.thumLogo}}" class="img-back" />
+              <image src="{{item.cover}}" class="img-back" />
             </view>
             <view class="text-box">
-              <view class="goods-title">{{item.name}}</view>
-              <view class="goods-price">¥ {{item.price}}</view>
+              <view class="goods-title">{{item.title}}</view>
+              <view class="goods-price">{{item.body}}</view>
             </view>
           </view>
         </navigator>
@@ -27,6 +27,10 @@ import api from '../api/api'
 import audio from '../utility/audio'
 
 export default class Node extends wepy.page {
+  config = {
+    navigationBarTitleText: '声网，慢慢寻找'
+  }
+
   props = {
     type: 'default'
   }
@@ -54,29 +58,26 @@ export default class Node extends wepy.page {
   events = {
   }
 
-  onLoad() {
-    this.fetchVoiceList()
+  onLoad(option) {
+    let nodeId = option.id
+    this.fetchVoiceList(nodeId)
   }
 
-  async fetchVoiceList(currentPage, size) {
+  async fetchVoiceList(nodeId, currentPage, size) {
     let that = this
-    const json = await api.getVoiceList({
+    const resp = await api.getTopicList({
       query: {
+        node_id: nodeId || 'all',
         page: currentPage || 1,
         size: size || 10
       }
     })
-    console.log(json)
-    if (json.data.code === 0) {
-      that.voiceList = [...that.voiceList, ...json.data.result]
+    that.voiceList = [...that.voiceList, ...resp.topics]
 
-      if (json.data.result.size === 0) { // 暂无数据
-        that.is_empty = true
-      }
-      that.$apply()
-    } else {
-      // tip.error(json.data.msg)
+    if (resp.topics === 0) { // 暂无数据
+      that.is_empty = true
     }
+    that.$apply()
     that.showLoading = false
   }
 }

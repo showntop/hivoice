@@ -197,7 +197,22 @@ export default class Editor extends wepy.page {
       })
     },
     saveTopic(e) {
-      console.log(e)
+      if (this.cover.length < 1 && this.cover === '../images/no_image.png') {
+        wepy.showToast({title: '请传一张封面', icon: 'none'})
+        return
+      }
+      if (this.srcFile.length < 5) {
+        wepy.showToast({title: '木有音频源', icon: 'none'})
+        return
+      }
+      if (this.title.length < 5) {
+        wepy.showToast({title: '写个标题呗', icon: 'none'})
+        return
+      }
+      if (this.info.length < 5) {
+        wepy.showToast({title: '写个介绍呗', icon: 'none'})
+        return
+      }
       this.saveVoice()
     }
   }
@@ -225,37 +240,18 @@ export default class Editor extends wepy.page {
   }
 
   async fetchUptoken() {
-    wepy.showLoading({
-      title: "加载中...",
-      mask: true
-    })
-    const json = await api.getUptoken()
-    if (json.statusCode !== 200) {
-      wepy.showToast({
-        title: json.data.message,
-        icon: 'none'
-      })
-    }
-    this.uptoken = json.data.token
-    this.upkey = json.data.key
-    this.updomain = json.data.domain
+    const resp = await api.getUptoken()
+
+    this.uptoken = resp.token
+    this.upkey = resp.key
+    this.updomain = resp.domain
     this.$apply()
-    wepy.hideLoading()
   }
 
   async fetchNodes() {
-    wepy.showLoading({
-      title: "加载中...",
-      mask: true
-    })
-    const json = await api.getNodeList()
-    if (json.statusCode !== 200) {
-      wepy.showToast({
-        title: json.data.message,
-        icon: 'none'
-      })
-    }
-    this.nodes = json.data.nodes
+    const resp = await api.getNodeList()
+
+    this.nodes = resp.nodes
 
     var m = new Map()
     for (var i = this.nodes.length - 1; i >= 0; i--) {
@@ -268,18 +264,15 @@ export default class Editor extends wepy.page {
 
     this.sections = ss
     console.log(this.sections)
+    if (this.nodes.length > 0) {
+      this.pickNode = this.nodes[0]
+    }
     this.$apply()
-    wepy.hideLoading()
   }
 
   async saveVoice() {
-    wepy.showLoading({
-      title: "加载中...",
-      mask: true
-    })
-
     let that = this
-    const json = await api.saveTopic({
+    const resp = await api.saveTopic({
       query: {
         cover: that.cover,
         title: that.title,
@@ -289,14 +282,12 @@ export default class Editor extends wepy.page {
         token: this.$root.$parent.globalData.userInfo.token
       }
     })
-    if (json.statusCode !== 200) {
-      wepy.showToast({
-        title: json.data.message,
-        icon: 'none'
-      })
-    }
-    console.log(json)
-    wepy.hideLoading()
+
+    console.log(resp)
+    wepy.showToast({
+      title: '发布成功'
+    })
+    wx.navigateBack(1)
   }
 }
 </script>

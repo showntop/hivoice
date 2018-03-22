@@ -31,7 +31,7 @@
 
     <view class="info">
       <view class="indicator"></view>
-      <text class="content">{{subjectDetail.body}}</text>
+      <view class="content"><text>{{subjectDetail.body}}</text></view>
     </view>
 
   </view>
@@ -70,25 +70,17 @@ export default class Subject extends wepy.page {
     this.getSubject()
   }
 
-  onShow() {
-  }
-
   async getSubject() {
-    wepy.showLoading({
-      title: "加载中...",
-      mask: true
-    })
     let that = this
-    const json = await api.getSubject({
+    const resp = await api.getTopic({
       query: {
       },
       path: {
         id: that.subjectId
       }
     })
-    that.subjectDetail = json.data.topic
+    that.subjectDetail = resp.topic
     that.$apply()
-    wepy.hideLoading()
     // audio.play(that.subjectDetail.source)
   }
 }
@@ -107,7 +99,7 @@ export default class Subject extends wepy.page {
     .info {
       .content {
         // font-size: 26rpx;
-        padding: 10px;
+        padding: 20rpx;
       }
     }
   }

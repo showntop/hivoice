@@ -51,28 +51,28 @@
 <template>
   <view class="container">
 
-    <swiper class="swiper" indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
+    <swiper class="swiper" indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="true" interval="3000" duration="500" circular="true">
       <block wx:for="{{bannerList}}" wx:key="key">
         <swiper-item>
-          <image src="{{item.cover}}" class="slide-image" @tap="goToAdvert({{item.targetUrl}})" />
+          <image src="{{item.cover}}" class="slide-image" @tap="goToItem({{item}})" />
         </swiper-item>
       </block>
     </swiper>
 
     <view class="nav_list">
-      <navigator open-type="navigate" url="/pages/node?name=life">
+      <navigator open-type="navigate" url="/pages/node?node_id=1">
         <image src="../images/icon_life_48.png" class="nav_icon"></image>
         <view class="nav_text">生活</view>
       </navigator>
-      <navigator open-type="navigate" url="/pages/node?name=laugh">
+      <navigator open-type="navigate" url="/pages/node?node_id=2">
         <image src="../images/icon_world_48.png" class="nav_icon"></image>
         <view class="nav_text">自然</view>
       </navigator>
-      <navigator open-type="navigate" url="/pages/node?name=laugh">
+      <navigator open-type="navigate" url="/pages/node?node_id=3">
         <image src="../images/icon_animal_48.png" class="nav_icon"></image>
         <view class="nav_text">人物</view>
       </navigator>
-      <navigator open-type="navigate" url="/pages/node?name=laugh">
+      <navigator open-type="navigate" url="/pages/node?node_id=4">
         <image src="../images/icon_laugh_48.png" class="nav_icon"></image>
         <view class="nav_text">搞笑</view>
       </navigator>
@@ -80,13 +80,12 @@
     <view class="subject_grid">
       <higrid :list.sync="voiceList"></higrid>
       <!--加载更多时动画-->
-      <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
+      <loadmore :show.sync="isLoading" message="正在加载"/>
       <!--暂无数据显示-->
-      <!-- <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder> -->
+      <placeholder :show.sync="isEmpty" message="暂无发现数据"/>
     </view>
     <view class="recorder-dialog" style="{{showRecorder?'display: block':'display:none'}}">
       <recorder class="recorder" @stoped.user="handleRecord"/>
-      <!-- <recorder class="recorder" :twoWayRecordFile="myRecordFile"/> -->
     </view>
     <charmButton :name.sync="recorderBtnName" @blooming.user="triggerRecord" @shrinking.user="stopRecord"></charmButton>
   </view>
@@ -101,15 +100,17 @@
   import Recorder from '../components/recorder'
   import Higrid from '../components/higrid'
   import CharmButton from '../components/charmbutton'
-  import BottomLoadMore from '../components/common/bottomLoadMore'
+  import Placeholder from '../components/common/placeholder'
+  import Loadmore from '../components/common/loadmore'
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: 'Hivoice'
+      navigationBarTitleText: '声网，心里有你'
     }
 
     components = {
-      bottomLoadMore: BottomLoadMore,
+      loadmore: Loadmore,
+      placeholder: Placeholder,
       higrid: Higrid,
       recorder: Recorder,
       charmButton: CharmButton
@@ -118,6 +119,8 @@
     mixins = [testMixin]
 
     data = {
+      isLoading: false,
+      isEmpty: false,
       currentPage: 0,
       recorderBtnName: '点我',
       bannerList: [],
@@ -129,18 +132,20 @@
     computed = {}
 
     methods = {
-      goToAdvert(url) {
-        console.log("url===" + url)
-        if (url.length === 0) {
-          return
+      goToItem(item) {
+        if (item.targetUrl && item.targetUrl.length > 0) {
+          wepy.navigateTo({
+            url: item.targetUrl
+          })
+        } else {
+          wepy.navigateTo({
+            url: "/pages/subject?id=" + item.id
+          })
         }
-        wepy.navigateTo({
-          url: url
-        })
       },
       handleRecord(res) {
         wepy.navigateTo({
-          url: "/pages/editor?recordFile=" + res.tempFilePath
+          url: "/pages/editor?recordFile=" + res.voiceUrl
         })
       },
       stopRecord(res) {
@@ -165,64 +170,54 @@
     onPullDownRefresh() {
       this.currentPage = 0
       this.voiceList = []
+      this.isEmpty = false
       this.fetchVoiceList()
     }
 
     onLoad() {
-      let that = this
-      that.fetchVoiceList()
-      that.fetchBannerList()
+      this.fetchVoiceList()
+      this.fetchBannerList()
     }
 
     onReachBottom() {
       let that = this
-      that.showLoading = true
-      console.log(that.page_total + "===" + that.currentPage) // 判断总页数是否大于翻页数
-      let trueLoadingMore = true
-      if (trueLoadingMore || (that.page_total) > that.currentPage) { // 防止重复加载
-        if (that.preventRepeatReuqest) {
-          return true
-        }
-        that.preventRepeatReuqest = true
-        that.currentPage++
-        that.fetchVoiceList(that.currentPage)
-        that.preventRepeatReuqest = false
-      } else {
-        that.showLoading = false
+      if (that.isEmpty) { // 防止重复加载
+        return
       }
+      if (that.preventRepeatReuqest) {
+        return true
+      }
+
+      that.preventRepeatReuqest = true
+      that.currentPage++
+      that.fetchVoiceList(that.currentPage)
+      that.preventRepeatReuqest = false
     }
 
     async fetchBannerList() {
-      const json = await api.getBannerList({
-        query: {}
+      const resp = await api.getBannerList({
+        query: {type: 'excellent'}
       })
-      if (json.data.code === 0) {
-        this.bannerList = json.data.result
-        this.$apply()
-      } else {}
+      this.bannerList = resp.topics
+      this.$apply()
     }
 
     async fetchVoiceList(currentPage, size) {
-      wepy.showLoading({
-        title: "加载中...",
-        mask: true
-      })
       let that = this
-      const json = await api.getVoiceList({
+      that.isLoading = true
+      const resp = await api.getTopicList({
         query: {
           offset: (currentPage || 0) * (size || 10),
           limit: size || 10
         }
       })
-      that.voiceList = [...that.voiceList, ...json.data.topics]
-
-      if (json.data.topics.size === 0) { // 暂无数据
-        that.is_empty = true
+      that.voiceList = [...that.voiceList, ...resp.topics]
+      if (resp.topics.length === 0) { // 暂无数据
+        that.isEmpty = true
       }
+      that.isLoading = false
       that.$apply()
-      that.showLoading = false
       wepy.stopPullDownRefresh()
-      wepy.hideLoading()
     }
   }
 </script>
