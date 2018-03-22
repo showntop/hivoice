@@ -287,7 +287,7 @@ export default class Editor extends wepy.page {
     wepy.showToast({
       title: '发布成功'
     })
-    wx.navigateBack(1)
+    wepy.navigateBack(1)
   }
 }
 </script>
