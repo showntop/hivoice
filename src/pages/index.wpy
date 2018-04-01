@@ -146,7 +146,7 @@
       handleRecord(res) {
         this.recorderBtnName = '点我'
         this.showRecorder = false
-        this.$invoke('charmButton', 'shrinking', 'someArgs')
+        this.$invoke('charmButton', 'shrink', 'someArgs')
 
         if (res.error) {
           wepy.showToast({title: res.error.errMsg})

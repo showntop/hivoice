@@ -25,50 +25,56 @@ export default class CharmButton extends wepy.component {
   }
 
   methods = {
-    shrinking() {
-      this.recorderBtnName = "点我"
-
-      let animation = wepy.createAnimation({
-        duration: 1000,
-        timingFunction: 'ease'
-      })
-
-      this.animation = animation
-
-      animation.scale(1, 1).rotate(0).step()
-      this.animationData = animation.export()
-
-      this.blooming = false
-    },
-    blooming() {
-      let animation = wepy.createAnimation({
-        duration: 2000,
-        timingFunction: 'ease'
-      })
-      this.animation = animation
-
-      animation.scale(2, 2).rotate(45).step()
-
-      this.animationData = animation.export()
-
-      setTimeout(() => {
-        animation.translate(20).step()
-        this.animationData = animation.export()
-        this.$apply()
-      }, 1000)
-
-      this.blooming = true
-    }
+    // shrinking() {
+    // },
+    // blooming() {
+    // },
     tapMe() {
       console.log("taped me.")
       if (this.blooming) {
-        this.shrinking()
+        this.shrink()
         this.$emit('shrinking', 1, 2, 3, 4)
       } else {
-        this.blooming()
+        this.bloom()
         this.$emit('blooming', 1, 2, 3, 4)
       }
     }
+  }
+
+  shrink() {
+    this.recorderBtnName = "点我"
+
+    let animation = wepy.createAnimation({
+      duration: 1000,
+      timingFunction: 'ease'
+    })
+
+    this.animation = animation
+
+    animation.scale(1, 1).rotate(0).step()
+    this.animationData = animation.export()
+
+    this.blooming = false
+  }
+
+  bloom() {
+    let animation = wepy.createAnimation({
+      duration: 2000,
+      timingFunction: 'ease'
+    })
+    this.animation = animation
+
+    animation.scale(2, 2).rotate(45).step()
+
+    this.animationData = animation.export()
+
+    setTimeout(() => {
+      animation.translate(20).step()
+      this.animationData = animation.export()
+      this.$apply()
+    }, 1000)
+
+    this.blooming = true
   }
 
   onLoad() {}
