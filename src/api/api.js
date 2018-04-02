@@ -24,15 +24,15 @@ const wxRequest = async(params = {}, url) => {
       header: { 'Content-Type': 'application/json' },
   });
 
-  if (needLoading) {
-    wepy.hideLoading()
-  }
-
   if (res.statusCode != 200) {
     wepy.showToast({
       title: JSON.stringify(res),
       icon: 'none'
     })
+  }
+
+  if (needLoading) {
+    wepy.hideLoading()
   }
   return res.data;
 };

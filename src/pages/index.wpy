@@ -144,6 +144,14 @@
         }
       },
       handleRecord(res) {
+        this.recorderBtnName = '点我'
+        this.showRecorder = false
+        this.$invoke('charmButton', 'shrink', 'someArgs')
+
+        if (res.error) {
+          wepy.showToast({title: res.error.errMsg})
+          return
+        }
         wepy.navigateTo({
           url: "/pages/editor?recordFile=" + res.voiceUrl
         })
@@ -159,6 +167,23 @@
         if (this.showRecorder) {
           return
         }
+
+        wepy.getSetting({
+          success(res) {
+            if (!res.authSetting['scope.record']) {
+              wepy.authorize({
+                scope: 'scope.record',
+                success: () => {
+                  // 用户已经同意小程序使用录音功能，后续调用 wx.startRecord 接口不会弹窗询问
+                  // this.startRecord()
+                },
+                fail: (res) => {
+                  console.log(res)
+                }
+              })
+            }
+          }
+        })
         this.recorderBtnName = '停止'
         this.showRecorder = true
         this.$invoke('recorder', 'startRecord', 'someArgs')
