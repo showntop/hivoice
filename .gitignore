@@ -2,3 +2,4 @@ node_modules
 dist
 .DB_store
 .DS_Store
+.wepycache
